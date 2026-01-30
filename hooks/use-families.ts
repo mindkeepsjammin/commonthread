@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { sql } from '@/lib/neon/client';
+import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import type { Family } from '@/types';
 
@@ -49,7 +49,7 @@ export function useFamilies() {
     queryFn: async (): Promise<FamilyWithMeta[]> => {
       if (!user?.id) return [];
 
-      const result = await sql`
+      const result = await getSql()`
         SELECT
           f.*,
           fm.role AS user_role,
@@ -73,7 +73,7 @@ export function useFamilyMembers(familyId: string | null) {
     queryFn: async (): Promise<FamilyMemberInfo[]> => {
       if (!familyId) return [];
 
-      const result = await sql`
+      const result = await getSql()`
         SELECT
           fm.id,
           fm.user_id,
@@ -108,7 +108,7 @@ export function useCreateFamily() {
       if (!user?.id) throw new Error('Not authenticated');
 
       // Create the family
-      const familyResult = await sql`
+      const familyResult = await getSql()`
         INSERT INTO families (name, created_by)
         VALUES (${name}, ${user.id})
         RETURNING *
@@ -121,7 +121,7 @@ export function useCreateFamily() {
       const family = familyResult[0] as any;
 
       // Add creator as admin member
-      await sql`
+      await getSql()`
         INSERT INTO family_memberships (family_id, user_id, role)
         VALUES (${family.id}, ${user.id}, 'admin')
       `;
@@ -151,7 +151,7 @@ export function useJoinFamily() {
       if (!user?.id) throw new Error('Not authenticated');
 
       // Find family by invite code (case-insensitive)
-      const familyResult = await sql`
+      const familyResult = await getSql()`
         SELECT * FROM families WHERE LOWER(invite_code) = LOWER(${inviteCode})
       `;
 
@@ -162,7 +162,7 @@ export function useJoinFamily() {
       const family = familyResult[0] as any;
 
       // Check if already a member
-      const existingMembership = await sql`
+      const existingMembership = await getSql()`
         SELECT id FROM family_memberships
         WHERE family_id = ${family.id} AND user_id = ${user.id}
       `;
@@ -172,7 +172,7 @@ export function useJoinFamily() {
       }
 
       // Join as member
-      await sql`
+      await getSql()`
         INSERT INTO family_memberships (family_id, user_id, role)
         VALUES (${family.id}, ${user.id}, 'member')
       `;

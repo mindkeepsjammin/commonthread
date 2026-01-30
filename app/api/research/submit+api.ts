@@ -1,4 +1,4 @@
-import { sql, type FormType } from '@/lib/neon/client';
+import { getSql, type FormType } from '@/lib/neon/client';
 
 interface SubmitRequest {
   formType: FormType;
@@ -38,7 +38,7 @@ export async function POST(request: Request): Promise<Response> {
     const userAgent = request.headers.get('user-agent') || null;
 
     // Insert into database
-    const result = await sql`
+    const result = await getSql()`
       INSERT INTO research_responses (
         form_type,
         consent_confirmed,

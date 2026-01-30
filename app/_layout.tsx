@@ -7,7 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { queryClient } from '@/lib/utils/query-client';
-import { supabase } from '@/lib/neon/client';
+import { getSupabase } from '@/lib/neon/client';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import { GlobalSnackbar } from '@/components/ui';
 
@@ -26,7 +26,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    getSupabase().auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -36,7 +36,7 @@ export default function RootLayout() {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = getSupabase().auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
 

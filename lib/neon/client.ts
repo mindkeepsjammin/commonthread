@@ -4,31 +4,42 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
 
-// Neon serverless client for direct database queries
-const databaseUrl = process.env.NEON_DATABASE_URL;
+// Neon serverless client for direct database queries (lazily initialized to avoid
+// throwing during Expo static rendering when env vars aren't available)
+let _sql: ReturnType<typeof neon> | null = null;
 
-if (!databaseUrl) {
-  throw new Error('Missing NEON_DATABASE_URL environment variable');
+export function getSql() {
+  if (!_sql) {
+    const databaseUrl = process.env.NEON_DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error('Missing NEON_DATABASE_URL environment variable');
+    }
+    _sql = neon(databaseUrl);
+  }
+  return _sql;
 }
 
-export const sql = neon(databaseUrl);
+// Supabase client for auth (lazily initialized for static rendering compatibility)
+let _supabase: ReturnType<typeof createClient<Database>> | null = null;
 
-// Supabase client for auth (auth solution TBD - keeping Supabase Auth for now)
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables (used for auth)');
+export function getSupabase() {
+  if (!_supabase) {
+    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Missing Supabase environment variables (used for auth)');
+    }
+    _supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        storage: typeof window !== 'undefined' ? AsyncStorage : undefined,
+        autoRefreshToken: true,
+        persistSession: typeof window !== 'undefined',
+        detectSessionInUrl: false,
+      },
+    });
+  }
+  return _supabase;
 }
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    storage: typeof window !== 'undefined' ? AsyncStorage : undefined,
-    autoRefreshToken: true,
-    persistSession: typeof window !== 'undefined',
-    detectSessionInUrl: false,
-  },
-});
 
 export type FormType = 'parent' | 'teen' | 'grandparent' | 'adult_no_children';
 
@@ -51,7 +62,7 @@ export async function submitResearchForm(
   userAgent?: string,
   ipHash?: string
 ): Promise<ResearchResponse> {
-  const result = await sql`
+  const result = await getSql()`
     INSERT INTO research_responses (form_type, consent_confirmed, preferred_name, responses, user_agent, ip_hash)
     VALUES (${formType}, ${consentConfirmed}, ${preferredName}, ${JSON.stringify(responses)}, ${userAgent || null}, ${ipHash || null})
     RETURNING *
@@ -60,7 +71,7 @@ export async function submitResearchForm(
 }
 
 export async function getResponsesByFormType(formType: FormType): Promise<ResearchResponse[]> {
-  const result = await sql`
+  const result = await getSql()`
     SELECT * FROM research_responses
     WHERE form_type = ${formType}
     ORDER BY submitted_at DESC
@@ -69,7 +80,7 @@ export async function getResponsesByFormType(formType: FormType): Promise<Resear
 }
 
 export async function getResponseCounts(): Promise<{ form_type: FormType; count: number }[]> {
-  const result = await sql`
+  const result = await getSql()`
     SELECT form_type, COUNT(*)::int as count
     FROM research_responses
     GROUP BY form_type

@@ -1,13 +1,13 @@
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
-import { supabase } from './client';
+import { getSupabase } from './client';
 
 WebBrowser.maybeCompleteAuthSession();
 
 const redirectUri = AuthSession.makeRedirectUri();
 
 export async function signInWithGoogle() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await getSupabase().auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: redirectUri,
@@ -36,7 +36,7 @@ export async function signInWithGoogle() {
     return { error: new Error('No tokens received from authentication') };
   }
 
-  const { error: sessionError } = await supabase.auth.setSession({
+  const { error: sessionError } = await getSupabase().auth.setSession({
     access_token: accessToken,
     refresh_token: refreshToken,
   });

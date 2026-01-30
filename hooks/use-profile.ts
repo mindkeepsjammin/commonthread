@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { sql } from '@/lib/neon/client';
+import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import type { Profile, SelfPortrait, RelationalFoundation } from '@/types';
 import type { Database } from '@/types/database';
@@ -32,7 +32,7 @@ export function useProfile() {
     queryFn: async (): Promise<Profile | null> => {
       if (!user?.id) return null;
 
-      const result = await sql`
+      const result = await getSql()`
         SELECT * FROM profiles WHERE id = ${user.id} LIMIT 1
       `;
 
@@ -58,7 +58,7 @@ export function useUpdateProfile() {
 
       const now = new Date().toISOString();
 
-      const result = await sql`
+      const result = await getSql()`
         UPDATE profiles SET
           updated_at = ${now},
           display_name = COALESCE(${updates.displayName ?? null}, display_name),
@@ -90,7 +90,7 @@ export function useCreateProfile() {
     mutationFn: async (profileData: { displayName: string; role?: Profile['role'] }) => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      const result = await sql`
+      const result = await getSql()`
         INSERT INTO profiles (id, display_name, role)
         VALUES (${user.id}, ${profileData.displayName}, ${profileData.role || null})
         ON CONFLICT (id) DO UPDATE SET

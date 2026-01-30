@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { sql } from '@/lib/neon/client';
+import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import { useOnboardingStore } from './use-onboarding-store';
 import type { OnboardingStep, SelfPortrait, RelationalFoundation } from '@/types';
@@ -28,7 +28,7 @@ export function useUpdateOnboarding() {
 
       // Handle self portrait update with merge
       if (params.selfPortrait) {
-        const currentResult = await sql`
+        const currentResult = await getSql()`
           SELECT self_portrait FROM profiles WHERE id = ${user.id}
         `;
         const existingPortrait = (currentResult[0]?.self_portrait as Record<string, unknown>) || {};
@@ -38,7 +38,7 @@ export function useUpdateOnboarding() {
           lastUpdated: now,
         };
 
-        await sql`
+        await getSql()`
           UPDATE profiles SET
             self_portrait = ${JSON.stringify(mergedPortrait)}::jsonb,
             updated_at = ${now}
@@ -48,7 +48,7 @@ export function useUpdateOnboarding() {
 
       // Handle relational foundation update with merge
       if (params.relationalFoundation) {
-        const currentResult = await sql`
+        const currentResult = await getSql()`
           SELECT relational_foundation FROM profiles WHERE id = ${user.id}
         `;
         const existingFoundation = (currentResult[0]?.relational_foundation as Record<string, unknown>) || {};
@@ -58,7 +58,7 @@ export function useUpdateOnboarding() {
           lastUpdated: now,
         };
 
-        await sql`
+        await getSql()`
           UPDATE profiles SET
             relational_foundation = ${JSON.stringify(mergedFoundation)}::jsonb,
             updated_at = ${now}
@@ -68,7 +68,7 @@ export function useUpdateOnboarding() {
 
       // Handle step update
       if (params.step) {
-        await sql`
+        await getSql()`
           UPDATE profiles SET
             onboarding_step = ${params.step},
             updated_at = ${now}
@@ -77,7 +77,7 @@ export function useUpdateOnboarding() {
       }
 
       // Fetch and return updated profile
-      const result = await sql`
+      const result = await getSql()`
         SELECT * FROM profiles WHERE id = ${user.id}
       `;
 
@@ -110,7 +110,7 @@ export function useCompleteOnboarding() {
 
       const now = new Date().toISOString();
 
-      const result = await sql`
+      const result = await getSql()`
         UPDATE profiles SET
           onboarding_step = 'completed',
           onboarding_completed_at = ${now},

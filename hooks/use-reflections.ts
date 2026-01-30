@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { sql } from '@/lib/neon/client';
+import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import type { Reflection, ReflectionContent } from '@/types';
 import type { ReflectionCreateInput, ReflectionUpdateInput } from '@/lib/validations';
@@ -42,13 +42,13 @@ export function useReflections(filter?: Reflection['type']) {
 
       let result;
       if (filter) {
-        result = await sql`
+        result = await getSql()`
           SELECT * FROM reflections
           WHERE user_id = ${user.id} AND type = ${filter}
           ORDER BY created_at DESC
         `;
       } else {
-        result = await sql`
+        result = await getSql()`
           SELECT * FROM reflections
           WHERE user_id = ${user.id}
           ORDER BY created_at DESC
@@ -72,7 +72,7 @@ export function useCreateReflection() {
 
       const contentJson = JSON.stringify({ text: input.content });
 
-      const result = await sql`
+      const result = await getSql()`
         INSERT INTO reflections (user_id, type, content, mood_score, is_shareable, shared_with)
         VALUES (
           ${user.id},
@@ -109,7 +109,7 @@ export function useUpdateReflection() {
         ? JSON.stringify({ text: updates.content })
         : null;
 
-      const result = await sql`
+      const result = await getSql()`
         UPDATE reflections SET
           type = COALESCE(${updates.type ?? null}, type),
           content = COALESCE(${contentJson}::jsonb, content),
@@ -139,7 +139,7 @@ export function useDeleteReflection() {
     mutationFn: async (id: string) => {
       if (!user?.id) throw new Error('Not authenticated');
 
-      await sql`
+      await getSql()`
         DELETE FROM reflections WHERE id = ${id} AND user_id = ${user.id}
       `;
     },

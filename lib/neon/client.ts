@@ -10,9 +10,9 @@ let _sql: ReturnType<typeof neon> | null = null;
 
 export function getSql() {
   if (!_sql) {
-    const databaseUrl = process.env.NEON_DATABASE_URL;
+    const databaseUrl = process.env.EXPO_PUBLIC_NEON_DATABASE_URL;
     if (!databaseUrl) {
-      throw new Error('Missing NEON_DATABASE_URL environment variable');
+      throw new Error('Missing EXPO_PUBLIC_NEON_DATABASE_URL environment variable');
     }
     _sql = neon(databaseUrl);
   }

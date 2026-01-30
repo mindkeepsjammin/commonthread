@@ -1,0 +1,237 @@
+import type { ResearchFormData } from './types';
+
+export const adultNoChildrenFormData: ResearchFormData = {
+  id: 'adult_no_children',
+  title: 'Adults Without Children Research Form',
+  openingFrame: {
+    paragraphs: [
+      'Families are shaped not only by parents, but by siblings, aunts, uncles, cousins, chosen family, and those who hold relationship without raising children themselves.',
+      'This form is a quiet inquiry into how you experience family connection, technology, and your place within a larger system.',
+      'There are no expectations or right answers—only what feels true for you.',
+    ],
+    consentText: 'I understand this is a reflection and research form, not therapy or advice.',
+  },
+  sections: [
+    {
+      id: 'context',
+      title: '1. Your Context',
+      description: 'Simple, Non-Defining',
+      questions: [
+        {
+          id: 'preferred_name',
+          type: 'short_answer',
+          question: 'What name would you like us to use for you?',
+          hint: 'optional',
+          required: false,
+        },
+        {
+          id: 'children_status',
+          type: 'single_select',
+          question: 'Which best describes you right now?',
+          hint: 'select one',
+          options: [
+            { value: 'no_children', label: 'I do not have children' },
+            { value: 'may_future', label: 'I may have children in the future' },
+            { value: 'no_plan', label: 'I do not plan to have children' },
+            { value: 'discerning', label: 'I am currently discerning this' },
+          ],
+          required: true,
+        },
+        {
+          id: 'family_relationship',
+          type: 'single_select',
+          question: 'How would you describe your relationship to your family overall?',
+          options: [
+            { value: 'very_close', label: 'Very close' },
+            { value: 'moderately_connected', label: 'Moderately connected' },
+            { value: 'distant_meaningful', label: 'Distant but meaningful' },
+            { value: 'limited_selective', label: 'Limited or selective' },
+            { value: 'still_evolving', label: 'Still evolving' },
+          ],
+          required: true,
+        },
+      ],
+    },
+    {
+      id: 'natural_pull',
+      title: '2. Your Natural Pull Toward Family',
+      description: 'This section explores choice, not obligation.',
+      questions: [
+        {
+          id: 'drawn_to_family',
+          type: 'single_select',
+          question: 'How naturally drawn do you feel to staying in relationship with your family?',
+          options: [
+            { value: 'very_drawn', label: 'Very drawn' },
+            { value: 'somewhat_drawn', label: 'Somewhat drawn' },
+            { value: 'neutral', label: 'Neutral' },
+            { value: 'selective', label: 'Selective' },
+            { value: 'unsure_changes', label: 'Unsure / changes over time' },
+          ],
+          required: true,
+        },
+        {
+          id: 'influences_connection',
+          type: 'multi_select',
+          question: 'What most influences how connected you feel to family?',
+          hint: 'select up to 3',
+          maxSelections: 3,
+          options: [
+            { value: 'emotional_safety', label: 'Emotional safety' },
+            { value: 'shared_values', label: 'Shared values' },
+            { value: 'history', label: 'History' },
+            { value: 'physical_distance', label: 'Physical distance' },
+            { value: 'life_stage', label: 'Life stage differences' },
+            { value: 'time_energy', label: 'Time and energy' },
+            { value: 'mutual_effort', label: 'Mutual effort' },
+          ],
+          required: true,
+        },
+      ],
+    },
+    {
+      id: 'tech_connector',
+      title: '3. Technology as a Connector (or Not)',
+      description: 'Technology can support connection—or complicate it.',
+      questions: [
+        {
+          id: 'stay_connected_how',
+          type: 'multi_select',
+          question: 'How do you most often stay connected with family?',
+          hint: 'select any',
+          options: [
+            { value: 'in_person', label: 'In person' },
+            { value: 'phone_calls', label: 'Phone calls' },
+            { value: 'texting', label: 'Texting' },
+            { value: 'video_calls', label: 'Video calls' },
+            { value: 'social_media', label: 'Social media' },
+            { value: 'group_chats', label: 'Group chats' },
+          ],
+          required: false,
+        },
+        {
+          id: 'tech_role',
+          type: 'single_select',
+          question: 'What role does technology play in your family relationships?',
+          options: [
+            { value: 'mostly_supportive', label: 'Mostly supportive' },
+            { value: 'mixed', label: 'Mixed' },
+            { value: 'mostly_challenging', label: 'Mostly challenging' },
+            { value: 'minimal', label: 'Minimal' },
+            { value: 'still_changing', label: 'Still changing' },
+          ],
+          required: true,
+        },
+        {
+          id: 'tech_easier',
+          type: 'reflection',
+          question: 'What does technology make easier for you in family relationships?',
+          hint: 'short reflection',
+          required: false,
+        },
+        {
+          id: 'tech_harder',
+          type: 'reflection',
+          question: 'What does it sometimes make harder?',
+          hint: 'short reflection, optional',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'family_system_role',
+      title: '4. Your Role in the Family System',
+      description: 'Having no children does not mean having no role.',
+      questions: [
+        {
+          id: 'experience_role',
+          type: 'multi_select',
+          question: 'How do you experience your role within your family?',
+          hint: 'select any',
+          options: [
+            { value: 'listener', label: 'Listener' },
+            { value: 'supporter', label: 'Supporter' },
+            { value: 'bridge', label: 'Bridge between people' },
+            { value: 'observer', label: 'Observer' },
+            { value: 'humor', label: 'Humor / lightness' },
+            { value: 'grounded', label: 'Grounded presence' },
+            { value: 'figuring_out', label: "I'm still figuring this out" },
+          ],
+          required: false,
+        },
+        {
+          id: 'meaningful_role',
+          type: 'reflection',
+          question: 'If you are an aunt, uncle, or chosen-family figure, what feels meaningful about that role?',
+          hint: 'optional reflection',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'perspective_learning',
+      title: '5. Perspective & Learning',
+      questions: [
+        {
+          id: 'learned_about_family',
+          type: 'reflection',
+          question: 'What have you learned about family relationships as an adult without children?',
+          hint: 'short reflection',
+          required: false,
+        },
+        {
+          id: 'misunderstand',
+          type: 'reflection',
+          question: "What do you think people sometimes misunderstand about adults who don't have children?",
+          hint: 'short reflection',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'looking_forward',
+      title: '6. Looking Forward',
+      description: 'Without Pressure',
+      questions: [
+        {
+          id: 'staying_connected',
+          type: 'reflection',
+          question: 'As families change over time, what feels most important to you about staying connected—or choosing distance?',
+          hint: 'short reflection',
+          required: false,
+        },
+        {
+          id: 'tool_connection',
+          type: 'reflection',
+          question: 'If a tool existed to support family connection without pressure or fixing, what would matter most to you? And what would it not do?',
+          hint: 'short reflection',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'closing',
+      title: '7. Closing',
+      questions: [
+        {
+          id: 'future_reflections',
+          type: 'single_select',
+          question: 'Would you be open to sharing reflections about family connection or technology in the future?',
+          options: [
+            { value: 'yes', label: 'Yes' },
+            { value: 'maybe', label: 'Maybe' },
+            { value: 'not_now', label: 'Not right now' },
+          ],
+          required: true,
+        },
+        {
+          id: 'anything_else',
+          type: 'reflection',
+          question: 'Is there anything else you want us to understand about your experience in family life?',
+          hint: 'optional',
+          required: false,
+        },
+      ],
+    },
+  ],
+};

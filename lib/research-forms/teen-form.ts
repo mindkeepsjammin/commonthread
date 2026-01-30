@@ -1,0 +1,230 @@
+import type { ResearchFormData } from './types';
+
+export const teenFormData: ResearchFormData = {
+  id: 'teen',
+  title: 'Teen Research Form',
+  subtitle: 'Families, Technology & Real Life',
+  openingFrame: {
+    paragraphs: [
+      'You are already an expert in how technology shows up in your life and family.',
+      "This form isn't a test, and it's not therapy. We're learning with you, not about you.",
+      'There are no right answers. What matters is what you actually notice.',
+      'You can skip any question.',
+    ],
+    consentText: 'I understand this is a research and reflection project, not therapy.',
+  },
+  sections: [
+    {
+      id: 'perspective',
+      title: '1. Your Perspective',
+      description: 'You Set the Context',
+      questions: [
+        {
+          id: 'preferred_name',
+          type: 'short_answer',
+          question: 'What name would you like us to use for you?',
+          hint: 'optional',
+          required: false,
+        },
+        {
+          id: 'age_range',
+          type: 'single_select',
+          question: 'How old are you?',
+          options: [
+            { value: '13-15', label: '13–15' },
+            { value: '16-18', label: '16–18' },
+          ],
+          required: true,
+        },
+        {
+          id: 'living_with',
+          type: 'multi_select',
+          question: 'Who do you currently live with most of the time?',
+          hint: 'select all that apply',
+          options: [
+            { value: 'parents', label: 'Parent(s)' },
+            { value: 'guardians', label: 'Guardian(s)' },
+            { value: 'grandparents', label: 'Grandparent(s)' },
+            { value: 'siblings', label: 'Sibling(s)' },
+            { value: 'other', label: 'Other' },
+          ],
+          required: true,
+        },
+      ],
+    },
+    {
+      id: 'researcher',
+      title: '2. You as a Researcher of Family Life',
+      description: 'Think of yourself as someone observing how your family actually works—especially around technology.',
+      questions: [
+        {
+          id: 'tech_affect_family',
+          type: 'multi_select',
+          question: 'From your point of view, how does technology affect your family most days?',
+          hint: 'select up to 3',
+          maxSelections: 3,
+          options: [
+            { value: 'helps_connect', label: 'It helps us connect' },
+            { value: 'causes_tension', label: 'It causes tension or arguments' },
+            { value: 'helps_relax', label: 'It helps people relax' },
+            { value: 'creates_distance', label: 'It creates distance' },
+            { value: 'depends_day', label: 'It depends on the day' },
+            { value: 'figuring_out', label: "I'm still figuring this out" },
+          ],
+          required: true,
+        },
+        {
+          id: 'notice_adults',
+          type: 'multi_select',
+          question: 'When technology is involved, what do you notice most about adults in your family?',
+          hint: 'select any',
+          options: [
+            { value: 'stressed_distracted', label: "They're stressed or distracted" },
+            { value: 'trying_best', label: "They're trying their best" },
+            { value: 'dont_notice_devices', label: "They don't notice how much they're on devices" },
+            { value: 'more_relaxed', label: "They're more relaxed" },
+            { value: 'open_talking', label: "They're open to talking about it" },
+          ],
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'learning',
+      title: "3. What You're Learning",
+      description: 'Your Expertise',
+      questions: [
+        {
+          id: 'tech_emotions',
+          type: 'multi_select',
+          question: 'What have you learned so far about technology and emotions?',
+          hint: 'select any that feel true',
+          options: [
+            { value: 'affects_mood', label: 'It affects my mood more than I expect' },
+            { value: 'less_alone', label: 'It helps me feel less alone' },
+            { value: 'feels_heavier', label: 'It can make things feel heavier' },
+            { value: 'express_myself', label: 'It helps me express myself' },
+            { value: 'depends_use', label: 'It depends how I use it' },
+            { value: 'still_learning', label: "I'm still learning" },
+          ],
+          required: false,
+        },
+        {
+          id: 'adults_dont_see',
+          type: 'reflection',
+          question: "What do you think adults often don't see about how teens use technology?",
+          hint: 'short reflection',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'seeing_eyes',
+      title: '4. Seeing Through Your Eyes',
+      description: 'Perspective-Taking',
+      questions: [
+        {
+          id: 'family_week',
+          type: 'reflection',
+          question: 'Imagine we could see your family through your eyes for a week. What would we notice?',
+          hint: 'short reflection',
+          required: false,
+        },
+        {
+          id: 'something_off',
+          type: 'single_select',
+          question: 'When something feels off at home, what do you usually notice first?',
+          hint: 'select one',
+          options: [
+            { value: 'talk_change', label: 'A change in how people talk' },
+            { value: 'silence_change', label: 'A change in silence' },
+            { value: 'more_phone', label: 'More phone use' },
+            { value: 'less_phone', label: 'Less phone use' },
+            { value: 'body_language', label: 'Body language' },
+            { value: 'not_sure', label: "I'm not sure" },
+          ],
+          required: true,
+        },
+      ],
+    },
+    {
+      id: 'tech_relationship',
+      title: '5. Your Relationship With Technology',
+      questions: [
+        {
+          id: 'after_phone',
+          type: 'single_select',
+          question: 'After spending time on your phone or devices, you usually feel:',
+          options: [
+            { value: 'more_connected', label: 'More connected' },
+            { value: 'more_tired', label: 'More tired' },
+            { value: 'about_same', label: 'About the same' },
+            { value: 'depends_what', label: 'Depends what I was doing' },
+          ],
+          required: true,
+        },
+        {
+          id: 'good_tech_use',
+          type: 'multi_select',
+          question: 'What kinds of tech use actually feel good to you?',
+          hint: 'select any',
+          options: [
+            { value: 'friends', label: 'Talking with friends' },
+            { value: 'music', label: 'Music' },
+            { value: 'learning', label: 'Learning something new' },
+            { value: 'creative', label: 'Creative expression' },
+            { value: 'games', label: 'Games' },
+            { value: 'scrolling', label: 'Quiet scrolling' },
+            { value: 'other', label: 'Other' },
+          ],
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'app_built',
+      title: '6. If This App Were Built With You',
+      description: 'This app is being shaped while people use it.',
+      questions: [
+        {
+          id: 'app_listening',
+          type: 'reflection',
+          question: 'If this app were really listening to teens, what would it do differently than most apps? And what would it not do?',
+          hint: 'short reflection',
+          required: false,
+        },
+        {
+          id: 'wish_adults_understood',
+          type: 'reflection',
+          question: 'What\'s one thing you wish adults understood better about teens, technology, or family life?',
+          hint: 'short reflection',
+          required: false,
+        },
+      ],
+    },
+    {
+      id: 'closing',
+      title: '7. Closing & Ongoing Research',
+      questions: [
+        {
+          id: 'future_feedback',
+          type: 'single_select',
+          question: 'Would you be open to sharing feedback later about how this app feels to use?',
+          options: [
+            { value: 'yes', label: 'Yes' },
+            { value: 'maybe', label: 'Maybe' },
+            { value: 'not_now', label: 'Not right now' },
+          ],
+          required: true,
+        },
+        {
+          id: 'see_through_eyes',
+          type: 'reflection',
+          question: 'Is there anything else you want us to see through your eyes?',
+          hint: 'optional',
+          required: false,
+        },
+      ],
+    },
+  ],
+};

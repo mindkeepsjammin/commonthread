@@ -4,13 +4,13 @@
 
 ## allowedTools
 
-- Bash(pnpm:*)
-- Bash(npm:*)
-- Bash(npx:*)
-- Bash(git:*)
-- Bash(neon:*)
-- Bash(eas:*)
-- Bash(expo:*)
+- Bash(pnpm:\*)
+- Bash(npm:\*)
+- Bash(npx:\*)
+- Bash(git:\*)
+- Bash(neon:\*)
+- Bash(eas:\*)
+- Bash(expo:\*)
 - Edit
 - Write
 - Read
@@ -18,6 +18,7 @@
 ## Documentation Structure
 
 This file contains all guidance for the Common Thread family wellness app. As the project grows, consider splitting into:
+
 - `.claude/ARCHITECTURE.md` - Database schema & folder structure
 - `.claude/API.md` - API endpoints & patterns
 - `.claude/SYNC.md` - Offline-first sync engine details
@@ -29,18 +30,19 @@ This file contains all guidance for the Common Thread family wellness app. As th
 
 Specialized agents are available in `.claude/agents/`. Use them for domain-specific tasks:
 
-| Agent | When to Use |
-|-------|-------------|
-| **context-navigator** | Finding code, understanding architecture, tracing data flow, locating features |
-| **database-sync-expert** | Schema changes, SQLite/Neon queries, migrations, sync metadata design |
-| **offline-sync-expert** | Sync pipeline issues, conflict resolution, background sync, network resilience, retry logic |
-| **ux-designer** | UX research, interaction design, accessibility audits, mobile optimization — use BEFORE ui-craftsman |
-| **ui-craftsman** | Building React Native components, forms, screens with NativeWind + Paper |
-| **test-engineer** | Writing tests, validating features, testing sync behavior and privacy filters |
-| **quality-reviewer** | Code review, security/privacy audit, performance review — use AFTER significant code changes |
-| **alder-wyn-expert** | Anything involving Alder Wyn: mirror-ship validation, context assembly, permission filters, system prompts, health scores |
+| Agent                    | When to Use                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| **context-navigator**    | Finding code, understanding architecture, tracing data flow, locating features                                            |
+| **database-sync-expert** | Schema changes, SQLite/Neon queries, migrations, sync metadata design                                                     |
+| **offline-sync-expert**  | Sync pipeline issues, conflict resolution, background sync, network resilience, retry logic                               |
+| **ux-designer**          | UX research, interaction design, accessibility audits, mobile optimization — use BEFORE ui-craftsman                      |
+| **ui-craftsman**         | Building React Native components, forms, screens with NativeWind + Paper                                                  |
+| **test-engineer**        | Writing tests, validating features, testing sync behavior and privacy filters                                             |
+| **quality-reviewer**     | Code review, security/privacy audit, performance review — use AFTER significant code changes                              |
+| **alder-wyn-expert**     | Anything involving Alder Wyn: mirror-ship validation, context assembly, permission filters, system prompts, health scores |
 
 **Key rules:**
+
 - Use **alder-wyn-expert** for ANY Alder Wyn AI companion changes
 - Use **quality-reviewer** proactively after completing features
 - Use **ux-designer** before **ui-craftsman** for non-trivial UX work
@@ -52,14 +54,15 @@ Specialized agents are available in `.claude/agents/`. Use them for domain-speci
 
 Domain knowledge documents in `.claude/skills/`. Read the relevant skill before starting work in that domain:
 
-| Skill | When to Read | Path |
-|-------|-------------|------|
-| **ct-add-feature** | Adding any new feature (data model, hooks, UI, Alder Wyn integration) | `.claude/skills/ct-add-feature/SKILL.md` |
-| **ct-fix-bug** | Diagnosing or fixing bugs, especially sync/privacy/offline issues | `.claude/skills/ct-fix-bug/SKILL.md` |
-| **ct-quality-check** | Before committing code, or reviewing changes for quality | `.claude/skills/ct-quality-check/SKILL.md` |
-| **ct-dual-migration** | Adding or modifying tables/columns in SQLite or Neon | `.claude/skills/ct-dual-migration/SKILL.md` |
+| Skill                 | When to Read                                                          | Path                                        |
+| --------------------- | --------------------------------------------------------------------- | ------------------------------------------- |
+| **ct-add-feature**    | Adding any new feature (data model, hooks, UI, Alder Wyn integration) | `.claude/skills/ct-add-feature/SKILL.md`    |
+| **ct-fix-bug**        | Diagnosing or fixing bugs, especially sync/privacy/offline issues     | `.claude/skills/ct-fix-bug/SKILL.md`        |
+| **ct-quality-check**  | Before committing code, or reviewing changes for quality              | `.claude/skills/ct-quality-check/SKILL.md`  |
+| **ct-dual-migration** | Adding or modifying tables/columns in SQLite or Neon                  | `.claude/skills/ct-dual-migration/SKILL.md` |
 
 **When to use skills:**
+
 - Read **ct-add-feature** at the start of any feature work — it covers dual-DB schema patterns, offline-first writes, privacy checklists, and agent routing
 - Read **ct-dual-migration** before ANY schema change — SQLite and Neon must stay in sync
 - Read **ct-quality-check** before committing — covers privacy, offline-first, and React Native standards
@@ -82,33 +85,34 @@ Domain knowledge documents in `.claude/skills/`. Read the relevant skill before 
 
 ## Project Stack
 
-| Technology | Purpose |
-|-----------|---------|
-| **Framework** | React Native + Expo |
-| **Language** | TypeScript (strict mode) |
-| **Navigation** | React Navigation 6 (Expo Router) |
-| **Styling** | NativeWind (Tailwind for RN) |
-| **UI Kit** | React Native Paper |
-| **Local Database** | Expo SQLite (offline-first) |
-| **Remote Database** | Neon (Serverless Postgres) |
-| **Auth** | TBD (auth solution to be determined) |
-| **Server State** | TanStack Query (React Query) |
-| **Local State** | Zustand |
-| **Validation** | Zod |
-| **Forms** | React Hook Form + @hookform/resolvers |
-| **Animations** | Reanimated 3 |
-| **Charts** | Victory Native |
-| **AI** | Gemini API (2.0 Flash for chat, 1.5 Pro for complex tasks) |
-| **Package Manager** | pnpm |
-| **Deployment** | EAS (Expo Application Services) |
+| Technology          | Purpose                                                    |
+| ------------------- | ---------------------------------------------------------- |
+| **Framework**       | React Native + Expo                                        |
+| **Language**        | TypeScript (strict mode)                                   |
+| **Navigation**      | React Navigation 6 (Expo Router)                           |
+| **Styling**         | NativeWind (Tailwind for RN)                               |
+| **UI Kit**          | React Native Paper                                         |
+| **Local Database**  | Expo SQLite (offline-first)                                |
+| **Remote Database** | Neon (Serverless Postgres)                                 |
+| **Auth**            | TBD (auth solution to be determined)                       |
+| **Server State**    | TanStack Query (React Query)                               |
+| **Local State**     | Zustand                                                    |
+| **Validation**      | Zod                                                        |
+| **Forms**           | React Hook Form + @hookform/resolvers                      |
+| **Animations**      | Reanimated 3                                               |
+| **Charts**          | Victory Native                                             |
+| **AI**              | Gemini API (2.0 Flash for chat, 1.5 Pro for complex tasks) |
+| **Package Manager** | pnpm                                                       |
+| **Deployment**      | EAS (Expo Application Services)                            |
 
 **Path Aliases** (configured in `tsconfig.json`):
+
 ```ts
-import { Button } from "@/components/ui/Button";           // → components/ui/Button
-import { useReflections } from "@/hooks/use-reflections";  // → hooks/use-reflections
-import { Reflection } from "@/types";                      // → types/index
-import { reflectionSchema } from "@/lib/validations";      // → lib/validations
-import { neon } from "@/lib/neon/client";                   // → lib/neon/client
+import { Button } from '@/components/ui/Button'; // → components/ui/Button
+import { useReflections } from '@/hooks/use-reflections'; // → hooks/use-reflections
+import { Reflection } from '@/types'; // → types/index
+import { reflectionSchema } from '@/lib/validations'; // → lib/validations
+import { neon } from '@/lib/neon/client'; // → lib/neon/client
 ```
 
 **Always use path aliases (`@/`)** instead of relative imports (`../../`) for better maintainability.
@@ -295,10 +299,11 @@ common-thread/
   - Ensure keyboard navigation works
 
 **Example form structure:**
+
 ```tsx
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { reflectionCreateSchema, type ReflectionCreateInput } from "@/lib/validations/reflection";
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { reflectionCreateSchema, type ReflectionCreateInput } from '@/lib/validations/reflection';
 
 const form = useForm<ReflectionCreateInput>({
   resolver: zodResolver(reflectionCreateSchema),
@@ -318,26 +323,57 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 
 ## UI/UX Standards
 
+**Design Inspiration:** Day One (Apple Design Award), Waffle (warm shared journaling), Reflectly (beautiful onboarding).
+
+### Typography
+
+- **Headings:** Merriweather (serif) — Bold for headlines, Regular for titles
+- **Body/Labels:** Inter — Regular, Medium, SemiBold
+- Fonts loaded via `expo-font` in `app/_layout.tsx`, configured in `lib/theme.ts`
+- Use Tailwind: `font-serif`, `font-serif-bold`, `font-sans`, `font-sans-medium`, `font-sans-semibold`
+- Paper components use fonts automatically via MD3 `configureFonts()`
+
+### Color Palette
+
+- **Primary (Terracotta):** #d95f3f — grounding, family bonds
+- **Secondary (Sage Green):** #7a905d — calm, growth
+- **Accent (Warm Gold):** #d9902b — highlights, celebration
+- **Neutral (Warm Gray):** #9a968b — backgrounds, text
+- **Surface warm:** #FDFCFA (warm white), #F9F5F1 (warm beige, Waffle-inspired)
+- Full 50–900 scale for all colors in `tailwind.config.js` and `lib/theme.ts`
+
+### Surfaces & Shadows
+
+- Use warm surfaces (#FDFCFA, #F9F5F1) instead of pure white
+- Use soft Day One-inspired shadows from `shadows` export in `lib/theme.ts` (sm/md/lg)
+- Cards should feel like keepsakes, not Material cards
+- Prefer `mode="elevated"` with `style={shadows.md}` over `mode="outlined"`
+
+### Gradients
+
+- Use `expo-linear-gradient` for auth/onboarding hero sections
+- Gradient pattern: `colors={[primary[100], primary[50], background]}`
+
+### Logo
+
+- `components/ui/Logo.tsx` — SVG-based, props: `size` (sm/md/lg), `variant` (full/icon)
+- Use on auth screens and onboarding welcome
+
+### General
+
 - **Use React Native Paper** for all inputs, buttons, dialogs, etc.
-- Use NativeWind (Tailwind) classes for styling
-- Ensure responsive design for different screen sizes
-- Use **lucide-react-native** or React Native Paper icons
-- Support dark mode using Paper's theme system
-- Use skeleton loaders for loading states
+- Use NativeWind (Tailwind) classes for layout and spacing
+- Use `rounded-2xl` or `rounded-3xl` for organic feel
+- Buttons use `contentStyle={{ paddingVertical: 6 }}` and `style={{ borderRadius: 12 }}`
+- Support dark mode using Paper's custom theme system
 - **Provide fallback UI** for:
   - Empty states (e.g., "No reflections yet")
   - Loading states (e.g., skeleton cards)
   - Error states (e.g., error messages with retry)
   - Offline states (e.g., "You're offline. Changes will sync when connected.")
 
-**Relationship Card UI:**
-- Display partner name and avatar
-- Show relationship type (parent-child, siblings, spouses)
-- Health score indicator (1-100)
-- Last interaction timestamp
-- Unread shared reflections badge
-
 **Platform Conventions:**
+
 - iOS: Follow Human Interface Guidelines, support swipe-to-go-back
 - Android: Follow Material Design, handle hardware back button
 
@@ -346,11 +382,13 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 ## Offline-First Sync Rules
 
 **Sync Status Values:**
+
 - `pending` - Saved locally, not yet synced
 - `synced` - Successfully synced to Neon
 - `conflict` - Server version differs, needs resolution
 
 **Sync Engine Rules:**
+
 - Save to SQLite immediately (optimistic UI)
 - Queue changes for background sync
 - Batch syncs every 5 minutes or on app background
@@ -358,6 +396,7 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 - Reduce sync frequency when battery low
 
 **Conflict Resolution:**
+
 - Default: Last-write-wins with user notification
 - Keep both versions when conflict detected
 - Let user choose which version to keep
@@ -367,6 +406,7 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 ## Alder Wyn (AI Companion) Rules
 
 **Core Principle: Mirror-ship**
+
 - Reflects back what it observes
 - Asks questions that invite exploration
 - Notices patterns and gently shares them
@@ -374,6 +414,7 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 - Celebrates growth and effort
 
 **Never Do:**
+
 - Never diagnose mental health conditions
 - Never provide medical advice
 - Never take sides in family conflicts
@@ -395,19 +436,20 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 
 ## Database Schema (Core Tables)
 
-| Table | Purpose |
-|-------|---------|
-| `profiles` | User profiles |
-| `families` | Family groups with invite codes |
-| `family_memberships` | User-family associations with roles (admin, member, child) |
-| `reflections` | Journal entries and check-ins |
-| `relationships` | Dyadic connections between users |
-| `relational_hearts` | Health scores for relationships |
-| `collective_hearts` | Family-wide shared data |
-| `alder_wyn_conversations` | AI chat history |
-| `sharing_settings` | Granular permission controls |
+| Table                     | Purpose                                                    |
+| ------------------------- | ---------------------------------------------------------- |
+| `profiles`                | User profiles                                              |
+| `families`                | Family groups with invite codes                            |
+| `family_memberships`      | User-family associations with roles (admin, member, child) |
+| `reflections`             | Journal entries and check-ins                              |
+| `relationships`           | Dyadic connections between users                           |
+| `relational_hearts`       | Health scores for relationships                            |
+| `collective_hearts`       | Family-wide shared data                                    |
+| `alder_wyn_conversations` | AI chat history                                            |
+| `sharing_settings`        | Granular permission controls                               |
 
 **Local SQLite tables** mirror Neon schema with additional sync metadata:
+
 - `sync_status` - pending/synced/conflict
 - `last_synced_at` - timestamp
 - `local_version` / `server_version` - for conflict detection
@@ -416,17 +458,17 @@ const onSubmit = async (data: ReflectionCreateInput) => {
 
 ## Naming Conventions
 
-| Entity | Convention | Example |
-|--------|-----------|---------|
-| **Components** | PascalCase.tsx | `ReflectionCard.tsx`, `MoodPicker.tsx` |
-| **Variables** | camelCase | `reflections`, `moodScore`, `isShareable` |
-| **DB Models** | PascalCase | `Reflection`, `Family`, `RelationalHeart` |
-| **Routes** | kebab-case folders | `/relationship`, `/alder-wyn` |
-| **API handlers** | RESTful | `GET /api/reflections`, `POST /api/sync` |
-| **Constants** | UPPER_SNAKE_CASE | `SYNC_INTERVAL_MS`, `MAX_MOOD_SCORE` |
-| **Custom Hooks** | useCamelCase | `useReflections`, `useSync`, `useOffline` |
-| **Zod Schemas** | camelCase + "Schema" | `reflectionCreateSchema`, `profileUpdateSchema` |
-| **Type Exports** | PascalCase + suffix | `ReflectionCreateInput`, `FamilyMembership` |
+| Entity           | Convention           | Example                                         |
+| ---------------- | -------------------- | ----------------------------------------------- |
+| **Components**   | PascalCase.tsx       | `ReflectionCard.tsx`, `MoodPicker.tsx`          |
+| **Variables**    | camelCase            | `reflections`, `moodScore`, `isShareable`       |
+| **DB Models**    | PascalCase           | `Reflection`, `Family`, `RelationalHeart`       |
+| **Routes**       | kebab-case folders   | `/relationship`, `/alder-wyn`                   |
+| **API handlers** | RESTful              | `GET /api/reflections`, `POST /api/sync`        |
+| **Constants**    | UPPER_SNAKE_CASE     | `SYNC_INTERVAL_MS`, `MAX_MOOD_SCORE`            |
+| **Custom Hooks** | useCamelCase         | `useReflections`, `useSync`, `useOffline`       |
+| **Zod Schemas**  | camelCase + "Schema" | `reflectionCreateSchema`, `profileUpdateSchema` |
+| **Type Exports** | PascalCase + suffix  | `ReflectionCreateInput`, `FamilyMembership`     |
 
 ---
 
@@ -470,6 +512,7 @@ When reviewing code, ensure:
 ## Claude Should Ask
 
 When implementing features, always clarify:
+
 - "Should this data be stored offline-first or remote-only?"
 - "What sharing permissions should apply to this feature?"
 - "Should this be accessible to all family members or specific relationships?"
@@ -483,6 +526,7 @@ When implementing features, always clarify:
 ## Quick Reference
 
 **Common Commands:**
+
 ```bash
 # Development
 pnpm install              # Install dependencies
@@ -502,6 +546,7 @@ eas submit                # Submit to app stores
 ```
 
 **File Locations:**
+
 - Neon migrations: `neon/migrations/`
 - SQLite schema: `lib/sqlite/schema.ts`
 - Validation schemas: `lib/validations/`
@@ -511,16 +556,19 @@ eas submit                # Submit to app stores
 - Business components: `components/`
 
 **Key Environment Variables:**
+
 - `EXPO_PUBLIC_NEON_DATABASE_URL` - Neon database connection string
 - `GEMINI_API_KEY` - Gemini API key for Alder Wyn
 
 **Important Database Fields:**
+
 - `is_shareable` - Boolean, must be true for others to see
 - `shared_with` - UUID array of users who can see the reflection
 - `sync_status` - pending/synced/conflict for offline tracking
 - `mood_score` - Integer 1-10 for check-ins
 
 **User Roles (family_memberships):**
+
 - `admin` - Can manage family settings, invite members
 - `member` - Standard family member
 - `child` - Restricted access (COPPA considerations)

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link, router, Href } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +9,8 @@ import { signupSchema, type SignupInput } from '@/lib/validations';
 import { signUpWithEmail } from '@/lib/neon/auth';
 import { signInWithGoogle } from '@/lib/neon/social-auth';
 import { Divider } from 'react-native-paper';
+import { colors } from '@/lib/theme';
+import { Logo } from '@/components/ui';
 
 export default function SignupScreen() {
   const theme = useTheme();
@@ -56,17 +59,32 @@ export default function SignupScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1"
     >
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 justify-center p-6">
-          <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
-            Create Account
-          </Text>
-          <Text variant="bodyLarge" className="mb-8 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
-            Join Common Thread
-          </Text>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <LinearGradient
+          colors={[colors.secondary[100], colors.secondary[50], theme.colors.background]}
+          className="items-center pb-6 pt-16"
+        >
+          <Logo size="lg" />
+          <View className="mt-4">
+            <Text
+              variant="bodyLarge"
+              className="text-center"
+              style={{ color: theme.colors.onSurfaceVariant }}
+            >
+              Create your account
+            </Text>
+          </View>
+        </LinearGradient>
 
+        <View className="px-6 pb-8 pt-6">
           {error && (
-            <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+            <View
+              className="mb-4 rounded-xl p-3"
+              style={{ backgroundColor: theme.colors.errorContainer }}
+            >
               <Text style={{ color: theme.colors.error }}>{error}</Text>
             </View>
           )}
@@ -162,13 +180,17 @@ export default function SignupScreen() {
             loading={isSubmitting}
             disabled={isSubmitting}
             className="mb-4"
+            contentStyle={{ paddingVertical: 6 }}
+            style={{ borderRadius: 12 }}
           >
             Create Account
           </Button>
 
           <View className="my-4 flex-row items-center">
             <Divider className="flex-1" />
-            <Text variant="bodySmall" className="mx-4" style={{ color: theme.colors.outline }}>OR</Text>
+            <Text variant="bodySmall" className="mx-4" style={{ color: theme.colors.outline }}>
+              OR
+            </Text>
             <Divider className="flex-1" />
           </View>
 
@@ -189,6 +211,8 @@ export default function SignupScreen() {
             loading={isGoogleLoading}
             disabled={isGoogleLoading || isSubmitting}
             className="mb-4"
+            contentStyle={{ paddingVertical: 4 }}
+            style={{ borderRadius: 12 }}
           >
             Sign up with Google
           </Button>

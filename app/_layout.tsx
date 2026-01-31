@@ -4,13 +4,13 @@ import { Stack, router, Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 import { queryClient } from '@/lib/utils/query-client';
 import { getSupabase } from '@/lib/neon/client';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import { GlobalSnackbar } from '@/components/ui';
-import { lightTheme, darkTheme } from '@/lib/theme';
+import { lightTheme } from '@/lib/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -22,17 +22,26 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const { setSession, setUser, setLoading, setSessionExpired, isAuthenticated } = useAuthStore();
+
+  const [fontsLoaded] = useFonts({
+    'Merriweather-Regular': require('../assets/fonts/Merriweather-Regular.ttf'),
+    'Merriweather-Bold': require('../assets/fonts/Merriweather-Bold.ttf'),
+    'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),
+    'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
+    'Inter-SemiBold': require('../assets/fonts/Inter-SemiBold.ttf'),
+  });
 
   useEffect(() => {
     // Check initial session
-    getSupabase().auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-      SplashScreen.hideAsync();
-    });
+    getSupabase()
+      .auth.getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+        if (fontsLoaded) SplashScreen.hideAsync();
+      });
 
     // Listen for auth changes
     const {
@@ -54,7 +63,14 @@ export default function RootLayout() {
     return () => subscription.unsubscribe();
   }, [setSession, setUser, setLoading, setSessionExpired, isAuthenticated]);
 
-  const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+  useEffect(() => {
+    if (fontsLoaded) SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  // Force light theme — our warm design system is optimized for light mode
+  const theme = lightTheme;
+
+  if (!fontsLoaded) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -85,7 +101,7 @@ export default function RootLayout() {
             options={{ headerShown: true, title: 'Delete Account', presentation: 'card' }}
           />
         </Stack>
-        <StatusBar style="auto" />
+        <StatusBar style="dark" />
         <GlobalSnackbar />
       </PaperProvider>
     </QueryClientProvider>

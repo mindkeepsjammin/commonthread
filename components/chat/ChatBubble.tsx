@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { shadows } from '@/lib/theme';
 import type { AlderWynMessage } from '@/types';
 
 interface ChatBubbleProps {
@@ -12,21 +13,21 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
   return (
     <View className={`mb-3 max-w-[80%] ${isUser ? 'self-end' : 'self-start'}`}>
       {!isUser && (
-        <Text variant="labelSmall" className="mb-1 text-neutral-500">
+        <Text
+          variant="labelSmall"
+          className="mb-1"
+          style={{ fontFamily: 'Merriweather-Regular', color: '#9a968b' }}
+        >
           Alder Wyn
         </Text>
       )}
       <View
-        className={`rounded-2xl px-4 py-3 ${
-          isUser
-            ? 'rounded-br-sm bg-primary-500'
-            : 'rounded-bl-sm bg-neutral-100'
+        className={`rounded-3xl px-4 py-3 ${
+          isUser ? 'rounded-br-sm bg-primary-400' : 'rounded-bl-sm bg-[#F9F5F1]'
         }`}
+        style={!isUser ? shadows.sm : undefined}
       >
-        <Text
-          variant="bodyMedium"
-          className={isUser ? 'text-white' : 'text-neutral-900'}
-        >
+        <Text variant="bodyMedium" className={isUser ? 'text-white' : 'text-neutral-900'}>
           {message.content}
         </Text>
       </View>

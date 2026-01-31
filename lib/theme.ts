@@ -1,8 +1,5 @@
-import {
-  MD3LightTheme,
-  MD3DarkTheme,
-  type MD3Theme,
-} from 'react-native-paper';
+import { Platform, type ViewStyle } from 'react-native';
+import { MD3LightTheme, MD3DarkTheme, configureFonts, type MD3Theme } from 'react-native-paper';
 
 // Common Thread brand colors — warm & organic palette
 export const colors = {
@@ -54,10 +51,73 @@ export const colors = {
     800: '#4a4944',
     900: '#333230',
   },
+  // Warm surface colors (inspired by Waffle)
+  surface: {
+    warm: '#FDFCFA',
+    warmBeige: '#F9F5F1',
+  },
 } as const;
+
+// Typography — Merriweather (headings) + Inter (body)
+const baseFont = {
+  fontFamily: 'Inter-Regular',
+} as const;
+
+const fontConfig = {
+  displayLarge: { ...baseFont, fontFamily: 'Merriweather-Bold', fontSize: 57, lineHeight: 64 },
+  displayMedium: { ...baseFont, fontFamily: 'Merriweather-Bold', fontSize: 45, lineHeight: 52 },
+  displaySmall: { ...baseFont, fontFamily: 'Merriweather-Bold', fontSize: 36, lineHeight: 44 },
+  headlineLarge: { ...baseFont, fontFamily: 'Merriweather-Bold', fontSize: 32, lineHeight: 44 },
+  headlineMedium: { ...baseFont, fontFamily: 'Merriweather-Bold', fontSize: 28, lineHeight: 40 },
+  headlineSmall: { ...baseFont, fontFamily: 'Merriweather-Regular', fontSize: 24, lineHeight: 34 },
+  titleLarge: { ...baseFont, fontFamily: 'Merriweather-Regular', fontSize: 22, lineHeight: 30 },
+  titleMedium: { ...baseFont, fontFamily: 'Inter-SemiBold', fontSize: 16, lineHeight: 28 },
+  titleSmall: { ...baseFont, fontFamily: 'Inter-SemiBold', fontSize: 14, lineHeight: 22 },
+  bodyLarge: { ...baseFont, fontFamily: 'Inter-Regular', fontSize: 16, lineHeight: 28 },
+  bodyMedium: { ...baseFont, fontFamily: 'Inter-Regular', fontSize: 14, lineHeight: 24 },
+  bodySmall: { ...baseFont, fontFamily: 'Inter-Regular', fontSize: 12, lineHeight: 20 },
+  labelLarge: { ...baseFont, fontFamily: 'Inter-Medium', fontSize: 14, lineHeight: 20 },
+  labelMedium: { ...baseFont, fontFamily: 'Inter-Medium', fontSize: 12, lineHeight: 16 },
+  labelSmall: { ...baseFont, fontFamily: 'Inter-Medium', fontSize: 11, lineHeight: 16 },
+};
+
+const fonts = configureFonts({ config: fontConfig });
+
+// Soft shadow presets (inspired by Day One — subtle, warm)
+export const shadows: Record<'sm' | 'md' | 'lg', ViewStyle> = Platform.select({
+  web: {
+    sm: { boxShadow: '0 1px 8px rgba(51, 50, 48, 0.06)' } as ViewStyle,
+    md: { boxShadow: '0 4px 20px rgba(51, 50, 48, 0.08)' } as ViewStyle,
+    lg: { boxShadow: '0 8px 40px rgba(51, 50, 48, 0.10)' } as ViewStyle,
+  },
+  default: {
+    sm: {
+      shadowColor: colors.neutral[900],
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    md: {
+      shadowColor: colors.neutral[900],
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 20,
+      elevation: 4,
+    },
+    lg: {
+      shadowColor: colors.neutral[900],
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.1,
+      shadowRadius: 40,
+      elevation: 8,
+    },
+  },
+})!;
 
 export const lightTheme: MD3Theme = {
   ...MD3LightTheme,
+  fonts,
   colors: {
     ...MD3LightTheme.colors,
     primary: colors.primary[500],
@@ -78,9 +138,9 @@ export const lightTheme: MD3Theme = {
     onErrorContainer: '#6f2b24',
     background: colors.neutral[50],
     onBackground: colors.neutral[900],
-    surface: '#ffffff',
+    surface: colors.surface.warm,
     onSurface: colors.neutral[900],
-    surfaceVariant: colors.neutral[100],
+    surfaceVariant: colors.surface.warmBeige,
     onSurfaceVariant: colors.neutral[700],
     outline: colors.neutral[400],
     outlineVariant: colors.neutral[200],
@@ -89,11 +149,11 @@ export const lightTheme: MD3Theme = {
     inversePrimary: colors.primary[300],
     elevation: {
       level0: 'transparent',
-      level1: colors.neutral[50],
-      level2: colors.neutral[100],
-      level3: colors.neutral[200],
-      level4: colors.neutral[200],
-      level5: colors.neutral[300],
+      level1: colors.surface.warm,
+      level2: colors.surface.warmBeige,
+      level3: colors.neutral[100],
+      level4: colors.neutral[100],
+      level5: colors.neutral[200],
     },
     surfaceDisabled: `${colors.neutral[900]}1F`,
     onSurfaceDisabled: `${colors.neutral[900]}61`,
@@ -105,6 +165,7 @@ export const lightTheme: MD3Theme = {
 
 export const darkTheme: MD3Theme = {
   ...MD3DarkTheme,
+  fonts,
   colors: {
     ...MD3DarkTheme.colors,
     primary: colors.primary[300],

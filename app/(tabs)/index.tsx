@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useProfile } from '@/hooks/use-profile';
 import { useReflections } from '@/hooks/use-reflections';
 import { useFamilies } from '@/hooks/use-families';
+import { shadows } from '@/lib/theme';
 import type { Reflection } from '@/types';
 
 const TYPE_LABELS: Record<Reflection['type'], string> = {
@@ -26,14 +27,22 @@ export default function HomeScreen() {
   return (
     <ScrollView className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="px-5 pb-8 pt-6">
-        <Text variant="headlineMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+        <Text
+          variant="headlineMedium"
+          className="mb-1"
+          style={{ color: theme.colors.onBackground }}
+        >
           Welcome back{profile?.displayName ? `, ${profile.displayName}` : ''}
         </Text>
-        <Text variant="bodyMedium" className="mb-5" style={{ color: theme.colors.onSurfaceVariant }}>
+        <Text
+          variant="bodyMedium"
+          className="mb-5"
+          style={{ color: theme.colors.onSurfaceVariant }}
+        >
           Your family connections at a glance
         </Text>
 
-        <View className="flex-row gap-3 mb-8">
+        <View className="mb-8 flex-row gap-3">
           <Button
             mode="contained"
             icon="pencil-plus-outline"
@@ -53,10 +62,14 @@ export default function HomeScreen() {
         </View>
 
         {/* Families Card */}
-        <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
+        <Card mode="elevated" className="mb-5 overflow-hidden rounded-2xl" style={shadows.md}>
           <View className="h-1.5 bg-primary-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+            <Text
+              variant="titleMedium"
+              className="mb-1"
+              style={{ color: theme.colors.onBackground }}
+            >
               Your Families
             </Text>
             {familiesLoading ? (
@@ -66,7 +79,7 @@ export default function HomeScreen() {
                 {families!.map(family => (
                   <View
                     key={family.id}
-                    className="flex-row items-center justify-between py-2 border-b border-neutral-100"
+                    className="flex-row items-center justify-between border-b border-neutral-100 py-2"
                   >
                     <View>
                       <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
@@ -98,10 +111,14 @@ export default function HomeScreen() {
         </Card>
 
         {/* Recent Reflections Card */}
-        <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
+        <Card mode="elevated" className="mb-5 overflow-hidden rounded-2xl" style={shadows.md}>
           <View className="h-1.5 bg-secondary-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+            <Text
+              variant="titleMedium"
+              className="mb-1"
+              style={{ color: theme.colors.onBackground }}
+            >
               Recent Reflections
             </Text>
             {reflectionsLoading ? (
@@ -119,11 +136,8 @@ export default function HomeScreen() {
                   });
 
                   return (
-                    <View
-                      key={reflection.id}
-                      className="py-2 border-b border-neutral-100"
-                    >
-                      <View className="flex-row items-center gap-2 mb-1">
+                    <View key={reflection.id} className="border-b border-neutral-100 py-2">
+                      <View className="mb-1 flex-row items-center gap-2">
                         <Chip compact textStyle={{ fontSize: 11 }}>
                           {TYPE_LABELS[reflection.type]}
                         </Chip>
@@ -145,20 +159,21 @@ export default function HomeScreen() {
             )}
           </Card.Content>
           <Card.Actions className="px-4 pb-4">
-            <Button
-              mode="contained-tonal"
-              onPress={() => router.push('/(tabs)/reflect')}
-            >
+            <Button mode="contained-tonal" onPress={() => router.push('/(tabs)/reflect')}>
               {hasReflections ? 'View All' : 'Start Reflecting'}
             </Button>
           </Card.Actions>
         </Card>
 
         {/* Alder Wyn Card */}
-        <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
+        <Card mode="elevated" className="mb-5 overflow-hidden rounded-2xl" style={shadows.md}>
           <View className="h-1.5 bg-accent-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+            <Text
+              variant="titleMedium"
+              className="mb-1"
+              style={{ color: theme.colors.onBackground }}
+            >
               Chat with Alder Wyn
             </Text>
             <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>

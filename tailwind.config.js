@@ -65,7 +65,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['System'],
+        sans: ['Inter-Regular', 'System'],
+        serif: ['Merriweather-Regular', 'Georgia'],
+        'serif-bold': ['Merriweather-Bold', 'Georgia'],
+        'sans-medium': ['Inter-Medium', 'System'],
+        'sans-semibold': ['Inter-SemiBold', 'System'],
       },
     },
   },

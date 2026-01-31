@@ -40,6 +40,20 @@ export default function TabsLayout() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.outline,
         headerShown: true,
+        headerTitle: 'Common Thread',
+        headerTitleStyle: { fontFamily: 'Merriweather-Bold' },
+        tabBarLabelStyle: { fontFamily: 'Inter-Medium', fontSize: 11 },
+        tabBarStyle: {
+          backgroundColor: theme.colors.surface,
+          borderTopColor: theme.colors.outlineVariant,
+          elevation: 0,
+          shadowOpacity: 0.06,
+          shadowOffset: { width: 0, height: -2 },
+          shadowRadius: 8,
+          paddingTop: 4,
+          paddingBottom: 6,
+          height: 60,
+        },
       }}
     >
       <Tabs.Screen

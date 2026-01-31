@@ -10,6 +10,7 @@ model: sonnet
 ## When to Use This Agent
 
 **User says:**
+
 - "create a component for..."
 - "build a form for..."
 - "fix the UI that..."
@@ -50,20 +51,62 @@ You are a specialized UI/UX and React Native component expert for Common Thread,
 
 ## Design System
 
-### Color Palette (from tailwind.config.js)
+### Design Inspiration
+
+- **Day One**: Soft shadows (40px spread), serif+sans typography, content-first minimalism
+- **Waffle**: Warm beige backgrounds (#F9F5F1), feels like a keepsake not a productivity tool
+- **Reflectly**: Smooth transitions, celebrated onboarding, distraction-free writing
+
+### Typography (from lib/theme.ts)
+
+```
+Headings: Merriweather-Bold (headlines), Merriweather-Regular (titles)
+Body:     Inter-Regular (body), Inter-Medium (labels), Inter-SemiBold (titles)
+```
+
+Tailwind: `font-serif`, `font-serif-bold`, `font-sans`, `font-sans-medium`, `font-sans-semibold`
+
+### Color Palette (from tailwind.config.js & lib/theme.ts)
+
 ```
 Primary (terracotta): #d95f3f (center)
 Secondary (sage):     #7a905d (center)
 Accent (golden):      #d9902b (center)
-Neutral:              Soft grays
+Neutral (warm gray):  #9a968b (center)
+
+Surface Colors:
+  Warm white:  #FDFCFA (cards, surfaces)
+  Warm beige:  #F9F5F1 (surfaceVariant, chat backgrounds)
 
 Heart Colors:
-  Low:    Red tones    (needs attention)
-  Medium: Orange tones (growing)
-  High:   Green tones  (thriving)
+  Low:    #c4432b (needs attention)
+  Medium: #e3a74e (growing)
+  High:   #7a905d (thriving)
+```
+
+### Shadow System (from lib/theme.ts)
+
+```typescript
+import { shadows } from '@/lib/theme';
+// shadows.sm — subtle card shadow
+// shadows.md — standard card shadow (most common)
+// shadows.lg — prominent elevation
+```
+
+Use `style={shadows.md}` on Cards instead of `mode="outlined"`.
+
+### Gradient Patterns
+
+```typescript
+import { LinearGradient } from 'expo-linear-gradient';
+import { colors } from '@/lib/theme';
+
+// Auth/onboarding hero gradient
+<LinearGradient colors={[colors.primary[100], colors.primary[50], theme.colors.background]}>
 ```
 
 ### NativeWind Usage
+
 ```typescript
 // Use NativeWind className for styling
 import { View, Text, Pressable } from 'react-native';
@@ -81,6 +124,7 @@ import { View, Text, Pressable } from 'react-native';
 ```
 
 ### React Native Paper Components
+
 ```typescript
 import { Button, Card, TextInput, Dialog, Snackbar, FAB, Chip } from 'react-native-paper';
 
@@ -99,6 +143,7 @@ import { Button, Card, TextInput, Dialog, Snackbar, FAB, Chip } from 'react-nati
 ## Best Practices
 
 ### Component Structure
+
 ```typescript
 import React, { memo } from 'react';
 import { View, Text, Pressable } from 'react-native';
@@ -136,6 +181,7 @@ export const ReflectionCard = memo(function ReflectionCard({
 ```
 
 ### Form Components
+
 ```typescript
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -201,6 +247,7 @@ export function ReflectionFormComponent() {
 ```
 
 ### Loading States
+
 ```typescript
 import { ActivityIndicator } from 'react-native-paper';
 import { View, Text } from 'react-native';
@@ -226,6 +273,7 @@ export function ReflectionCardSkeleton() {
 ```
 
 ### List Patterns (FlatList)
+
 ```typescript
 import { FlatList } from 'react-native';
 import { RefreshControl } from 'react-native';
@@ -255,6 +303,7 @@ export function ReflectionList() {
 ```
 
 ### Bottom Sheet / Modal Pattern
+
 ```typescript
 import { Dialog, Portal, Button } from 'react-native-paper';
 import { View, Text } from 'react-native';
@@ -287,6 +336,7 @@ export function ShareDialog({ visible, onDismiss, onShare }: ShareDialogProps) {
 ```
 
 ### Animations with Reanimated
+
 ```typescript
 import Animated, { FadeIn, FadeOut, SlideInDown } from 'react-native-reanimated';
 
@@ -345,18 +395,21 @@ import Animated, { FadeIn, FadeOut, SlideInDown } from 'react-native-reanimated'
 ## Integration Points
 
 ### Works Best With
+
 - **ux-designer**: Implement designs from UX research
 - **quality-reviewer**: Review component quality and performance
 - **test-engineer**: Test component interactions
 - **context-navigator**: Find existing component patterns
 
 ### Handoff Points
+
 1. After UX design is approved → Build components
 2. After component creation → **quality-reviewer** reviews
 3. Before merge → Accessibility validation
 4. After implementation → **test-engineer** tests interactions
 
 ## Success Criteria
+
 - [ ] Components use React Native Paper + NativeWind
 - [ ] Accessibility props on all interactive elements
 - [ ] Loading and error states implemented

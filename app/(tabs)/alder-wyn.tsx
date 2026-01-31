@@ -11,16 +11,15 @@ export default function AlderWynScreen() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<AlderWynMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | undefined>();
-  const [contextType, setContextType] = useState<
-    'personal' | 'relational' | 'collective'
-  >('personal');
+  const [contextType, setContextType] = useState<'personal' | 'relational' | 'collective'>(
+    'personal'
+  );
   const { user } = useAuthStore();
   const sendMutation = useSendMessage();
 
-  const { data: conversation, isLoading: isLoadingHistory } =
-    useConversationHistory(
-      user?.id ? { userId: user.id, contextType } : null
-    );
+  const { data: conversation, isLoading: isLoadingHistory } = useConversationHistory(
+    user?.id ? { userId: user.id, contextType } : null
+  );
 
   // Initialize messages from history when conversation loads or context changes
   useEffect(() => {
@@ -50,18 +49,18 @@ export default function AlderWynScreen() {
       timestamp: new Date().toISOString(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setMessage('');
 
     sendMutation.mutate(
       { conversationId, message: text, userId: user.id, contextType },
       {
-        onSuccess: (data) => {
+        onSuccess: data => {
           setConversationId(data.conversationId);
-          setMessages((prev) => [...prev, data.reply]);
+          setMessages(prev => [...prev, data.reply]);
         },
         onError: () => {
-          setMessages((prev) => [
+          setMessages(prev => [
             ...prev,
             {
               role: 'assistant',
@@ -76,21 +75,15 @@ export default function AlderWynScreen() {
 
   return (
     <KeyboardAvoidingView
-      className="flex-1 bg-neutral-50"
+      className="flex-1 bg-[#F9F5F1]"
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={90}
     >
-      <ContextSelector
-        contextType={contextType}
-        onContextTypeChange={handleContextChange}
-      />
+      <ContextSelector contextType={contextType} onContextTypeChange={handleContextChange} />
 
-      <MessageList
-        messages={messages}
-        isLoading={sendMutation.isPending || isLoadingHistory}
-      />
+      <MessageList messages={messages} isLoading={sendMutation.isPending || isLoadingHistory} />
 
-      <View className="flex-row items-center border-t border-neutral-200 bg-white p-2">
+      <View className="flex-row items-center border-t border-neutral-200 bg-[#FDFCFA] p-3">
         <TextInput
           mode="outlined"
           placeholder="Type a message..."

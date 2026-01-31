@@ -13,9 +13,10 @@ const ROLE_LABELS: Record<string, string> = {
 interface FamilyCardProps {
   family: FamilyWithMeta;
   onPress: () => void;
+  onInvite?: () => void;
 }
 
-export function FamilyCard({ family, onPress }: FamilyCardProps) {
+export function FamilyCard({ family, onPress, onInvite }: FamilyCardProps) {
   const [showCode, setShowCode] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -39,6 +40,27 @@ export function FamilyCard({ family, onPress }: FamilyCardProps) {
           {family.memberCount} {family.memberCount === 1 ? 'member' : 'members'}
         </Text>
 
+        <View className="flex-row gap-2 mb-2">
+          <Button
+            mode="text"
+            compact
+            icon="share-variant"
+            onPress={() => setShowCode(prev => !prev)}
+          >
+            {showCode ? 'Hide Code' : 'Show Invite Code'}
+          </Button>
+          {onInvite && (
+            <Button
+              mode="text"
+              compact
+              icon="email-outline"
+              onPress={onInvite}
+            >
+              Invite by Email
+            </Button>
+          )}
+        </View>
+
         {showCode ? (
           <View className="flex-row items-center justify-between bg-neutral-100 rounded-lg p-3">
             <Text variant="titleSmall" className="font-mono tracking-widest">
@@ -53,16 +75,7 @@ export function FamilyCard({ family, onPress }: FamilyCardProps) {
               {copied ? 'Copied' : 'Copy'}
             </Button>
           </View>
-        ) : (
-          <Button
-            mode="text"
-            compact
-            icon="share-variant"
-            onPress={() => setShowCode(true)}
-          >
-            Show Invite Code
-          </Button>
-        )}
+        ) : null}
       </Card.Content>
     </Card>
   );

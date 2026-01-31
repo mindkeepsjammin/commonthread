@@ -116,7 +116,7 @@ export default function RelationalFoundationScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             Important people in your life
           </Text>
           <Text
@@ -164,7 +164,7 @@ export default function RelationalFoundationScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             Relationship strengths you're proud of
           </Text>
           <Text

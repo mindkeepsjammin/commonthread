@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { Link, router, Href } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +11,7 @@ import { useAuthStore } from '@/hooks/use-auth-store';
 import { Divider } from 'react-native-paper';
 
 export default function LoginScreen() {
+  const theme = useTheme();
   const { isSessionExpired, setSessionExpired } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -49,11 +50,11 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1"
     >
-      <View className="flex-1 justify-center bg-neutral-50 p-6">
-        <Text variant="headlineLarge" className="mb-2 text-center">
+      <View className="flex-1 justify-center p-6" style={{ backgroundColor: theme.colors.background }}>
+        <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
           Welcome Back
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-600">
+        <Text variant="bodyLarge" className="mb-8 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
           Sign in to Common Thread
         </Text>
 

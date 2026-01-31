@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
             />
           </View>
 
-          <Text variant="headlineLarge" className="text-center mb-4">
+          <Text variant="headlineLarge" className="text-center mb-4" style={{ color: theme.colors.onBackground }}>
             Welcome to Common Thread
           </Text>
 
@@ -58,7 +58,7 @@ export default function WelcomeScreen() {
               size={24}
               color={theme.colors.primary}
             />
-            <Text variant="bodyMedium" className="ml-3 flex-1">
+            <Text variant="bodyMedium" className="ml-3 flex-1" style={{ color: theme.colors.onSurface }}>
               Create your living self-portrait — a snapshot of who you are right now
             </Text>
           </View>
@@ -69,7 +69,7 @@ export default function WelcomeScreen() {
               size={24}
               color={theme.colors.primary}
             />
-            <Text variant="bodyMedium" className="ml-3 flex-1">
+            <Text variant="bodyMedium" className="ml-3 flex-1" style={{ color: theme.colors.onSurface }}>
               Map your relationships and discover common threads
             </Text>
           </View>
@@ -80,7 +80,7 @@ export default function WelcomeScreen() {
               size={24}
               color={theme.colors.primary}
             />
-            <Text variant="bodyMedium" className="ml-3 flex-1">
+            <Text variant="bodyMedium" className="ml-3 flex-1" style={{ color: theme.colors.onSurface }}>
               Meet Alder Wyn, your companion for reflection and growth
             </Text>
           </View>

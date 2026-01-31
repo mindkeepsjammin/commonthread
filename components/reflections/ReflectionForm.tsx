@@ -1,5 +1,5 @@
 import { View, ScrollView } from 'react-native';
-import { Text, TextInput, Button, Chip, Switch } from 'react-native-paper';
+import { Text, TextInput, Button, Chip, Switch, useTheme } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { reflectionCreateSchema, type ReflectionCreateInput } from '@/lib/validations';
@@ -40,6 +40,7 @@ export function ReflectionForm({
   isLoading,
   submitLabel = 'Save',
 }: ReflectionFormProps) {
+  const theme = useTheme();
   const { control, handleSubmit, watch, setValue } = useForm<ReflectionCreateInput>({
     resolver: zodResolver(reflectionCreateSchema),
     defaultValues: {
@@ -58,7 +59,7 @@ export function ReflectionForm({
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-      <Text variant="titleSmall" className="mb-2">
+      <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
         Type
       </Text>
       <View className="flex-row flex-wrap gap-2 mb-4">
@@ -91,7 +92,7 @@ export function ReflectionForm({
               style={{ minHeight: 120 }}
             />
             {error && (
-              <Text variant="bodySmall" className="text-red-600 mt-1">
+              <Text variant="bodySmall" className="mt-1" style={{ color: theme.colors.error }}>
                 {error.message}
               </Text>
             )}
@@ -99,7 +100,7 @@ export function ReflectionForm({
         )}
       />
 
-      <Text variant="titleSmall" className="mb-2">
+      <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
         Mood (optional)
       </Text>
       <View className="flex-row flex-wrap gap-1 mb-4">
@@ -122,7 +123,7 @@ export function ReflectionForm({
         render={({ field: { value, onChange } }) => (
           <View className="mb-4">
             <View className="flex-row items-center justify-between">
-              <Text variant="bodyMedium">Share with family</Text>
+              <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>Share with family</Text>
               <Switch
                 value={value}
                 onValueChange={checked => {
@@ -137,7 +138,7 @@ export function ReflectionForm({
 
       {isShareable && familyMembers.length > 0 && (
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             Share with
           </Text>
           <View className="flex-row flex-wrap gap-2">
@@ -164,7 +165,7 @@ export function ReflectionForm({
       )}
 
       {isShareable && familyMembers.length === 0 && (
-        <Text variant="bodySmall" className="mb-6 text-neutral-400">
+        <Text variant="bodySmall" className="mb-6" style={{ color: theme.colors.outline }}>
           Join a family to share reflections with others.
         </Text>
       )}

@@ -1,7 +1,11 @@
 import { GoogleGenAI } from '@google/genai';
 import { getSql } from '@/lib/neon/client';
-
-const SYSTEM_PROMPT = `You are Alder Wyn, a gentle and warm AI companion within the Common Thread app. Your purpose is to help people reflect on their relationships and personal growth. You listen with care, ask thoughtful questions, and encourage self-awareness. You never judge. You speak simply and kindly, like a wise friend. Keep responses concise (2-4 sentences typically). When appropriate, gently guide users toward deeper reflection about their family connections and relational patterns.`;
+import {
+  verifyContextPermission,
+  type PermissionContext,
+} from '@/lib/alder-wyn/permission-filter';
+import { assembleContext } from '@/lib/alder-wyn/context-assembler';
+import { getSystemPrompt, formatContextData } from '@/lib/alder-wyn/prompts';
 
 interface ChatRequest {
   conversationId?: string;
@@ -35,6 +39,26 @@ export async function POST(request: Request): Promise<Response> {
     const contextType = body.contextType || 'personal';
     const now = new Date().toISOString();
 
+    // Verify permission before proceeding
+    const permissionContext: PermissionContext = {
+      userId: body.userId,
+      contextType,
+      contextId: body.contextId,
+    };
+
+    const hasPermission = await verifyContextPermission(permissionContext);
+    if (!hasPermission) {
+      return Response.json(
+        { error: 'You do not have permission to access this context' },
+        { status: 403 }
+      );
+    }
+
+    // Assemble privacy-filtered context and build system prompt
+    const contextData = await assembleContext(permissionContext);
+    const formattedContext = formatContextData(contextData);
+    const systemPrompt = getSystemPrompt(contextType, formattedContext);
+
     // Load existing conversation or start fresh
     let conversationId = body.conversationId;
     let existingMessages: { role: string; content: string; timestamp: string }[] = [];
@@ -62,12 +86,16 @@ export async function POST(request: Request): Promise<Response> {
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
-      config: { systemInstruction: SYSTEM_PROMPT },
+      config: { systemInstruction: systemPrompt },
       contents,
     });
 
-    const replyText = response.text ?? 'I'm here whenever you're ready to talk.';
-    const assistantMessage = { role: 'assistant' as const, content: replyText, timestamp: new Date().toISOString() };
+    const replyText = response.text ?? "I'm here whenever you're ready to talk.";
+    const assistantMessage = {
+      role: 'assistant' as const,
+      content: replyText,
+      timestamp: new Date().toISOString(),
+    };
     const updatedMessages = [...allMessages, assistantMessage];
 
     // Persist to database

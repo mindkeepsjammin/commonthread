@@ -18,18 +18,18 @@ export default function ResetPasswordSentScreen() {
         />
       </View>
 
-      <Text variant="headlineLarge" className="mb-2 text-center">
+      <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
         Check Your Email
       </Text>
-      <Text variant="bodyLarge" className="mb-2 text-center text-neutral-500">
+      <Text variant="bodyLarge" className="mb-2 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
         We've sent a password reset link to:
       </Text>
       {email && (
-        <Text variant="bodyLarge" className="mb-8 text-center font-bold">
+        <Text variant="bodyLarge" className="mb-8 text-center font-bold" style={{ color: theme.colors.onBackground }}>
           {email}
         </Text>
       )}
-      <Text variant="bodyMedium" className="mb-8 text-center text-neutral-400">
+      <Text variant="bodyMedium" className="mb-8 text-center" style={{ color: theme.colors.outline }}>
         If you don't see the email, check your spam folder.
       </Text>
 

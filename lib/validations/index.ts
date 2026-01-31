@@ -75,6 +75,13 @@ export const familyJoinSchema = z.object({
   inviteCode: z.string().length(8, 'Invite code must be 8 characters'),
 });
 
+// Family invite schema
+export const familyInviteSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
+
+export type FamilyInviteInput = z.infer<typeof familyInviteSchema>;
+
 // Sharing settings schema
 export const sharingSettingsSchema = z.object({
   targetUserId: z.string().uuid().optional(),
@@ -82,7 +89,24 @@ export const sharingSettingsSchema = z.object({
   shareableFields: z.array(z.string()),
 });
 
+// Alder Wyn schemas
+export const alderWynMessageSchema = z.object({
+  role: z.enum(['user', 'assistant']),
+  content: z.string().min(1, 'Message content is required'),
+  timestamp: z.string(),
+});
+
+export const alderWynSendMessageSchema = z.object({
+  conversationId: z.string().uuid().optional(),
+  message: z.string().min(1, 'Message is required').max(5000, 'Message too long'),
+  contextType: z.enum(['personal', 'relational', 'collective']).default('personal'),
+  contextId: z.string().uuid().optional(),
+  userId: z.string().uuid(),
+});
+
 // Type exports
+export type AlderWynMessageInput = z.infer<typeof alderWynMessageSchema>;
+export type AlderWynSendMessageInput = z.infer<typeof alderWynSendMessageSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type SignupInput = z.infer<typeof signupSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;

@@ -25,6 +25,48 @@ This file contains all guidance for the Common Thread family wellness app. As th
 
 ---
 
+## Subagents
+
+Specialized agents are available in `.claude/agents/`. Use them for domain-specific tasks:
+
+| Agent | When to Use |
+|-------|-------------|
+| **context-navigator** | Finding code, understanding architecture, tracing data flow, locating features |
+| **database-sync-expert** | Schema changes, SQLite/Neon queries, migrations, sync metadata design |
+| **offline-sync-expert** | Sync pipeline issues, conflict resolution, background sync, network resilience, retry logic |
+| **ux-designer** | UX research, interaction design, accessibility audits, mobile optimization — use BEFORE ui-craftsman |
+| **ui-craftsman** | Building React Native components, forms, screens with NativeWind + Paper |
+| **test-engineer** | Writing tests, validating features, testing sync behavior and privacy filters |
+| **quality-reviewer** | Code review, security/privacy audit, performance review — use AFTER significant code changes |
+| **alder-wyn-expert** | Anything involving Alder Wyn: mirror-ship validation, context assembly, permission filters, system prompts, health scores |
+
+**Key rules:**
+- Use **alder-wyn-expert** for ANY Alder Wyn AI companion changes
+- Use **quality-reviewer** proactively after completing features
+- Use **ux-designer** before **ui-craftsman** for non-trivial UX work
+- Use **database-sync-expert** or **offline-sync-expert** for any data layer changes
+
+---
+
+## Skills
+
+Domain knowledge documents in `.claude/skills/`. Read the relevant skill before starting work in that domain:
+
+| Skill | When to Read | Path |
+|-------|-------------|------|
+| **ct-add-feature** | Adding any new feature (data model, hooks, UI, Alder Wyn integration) | `.claude/skills/ct-add-feature/SKILL.md` |
+| **ct-fix-bug** | Diagnosing or fixing bugs, especially sync/privacy/offline issues | `.claude/skills/ct-fix-bug/SKILL.md` |
+| **ct-quality-check** | Before committing code, or reviewing changes for quality | `.claude/skills/ct-quality-check/SKILL.md` |
+| **ct-dual-migration** | Adding or modifying tables/columns in SQLite or Neon | `.claude/skills/ct-dual-migration/SKILL.md` |
+
+**When to use skills:**
+- Read **ct-add-feature** at the start of any feature work — it covers dual-DB schema patterns, offline-first writes, privacy checklists, and agent routing
+- Read **ct-dual-migration** before ANY schema change — SQLite and Neon must stay in sync
+- Read **ct-quality-check** before committing — covers privacy, offline-first, and React Native standards
+- Read **ct-fix-bug** when investigating any bug — includes sync state debugging, privacy breach patterns, and severity guide
+
+---
+
 ## General Philosophy
 
 - **Always prioritize clarity, modularity, and developer experience**
@@ -78,73 +120,131 @@ import { neon } from "@/lib/neon/client";                   // → lib/neon/clie
 ```
 common-thread/
 ├── app/                              # Expo Router screens
-│   ├── (auth)/
+│   ├── (auth)/                       # Auth flow
+│   │   ├── _layout.tsx
 │   │   ├── login.tsx
 │   │   ├── signup.tsx
-│   │   └── _layout.tsx
+│   │   ├── complete-profile.tsx
+│   │   ├── forgot-password.tsx
+│   │   ├── reset-password.tsx
+│   │   ├── reset-password-sent.tsx
+│   │   └── verify-email.tsx
+│   ├── (onboarding)/                 # Onboarding flow
+│   │   ├── _layout.tsx
+│   │   ├── welcome.tsx
+│   │   ├── self-portrait.tsx
+│   │   ├── relational-foundation.tsx
+│   │   └── family-preview.tsx
 │   ├── (tabs)/                       # Bottom tab navigation
+│   │   ├── _layout.tsx
 │   │   ├── index.tsx                 # Home (relationship list)
 │   │   ├── reflect.tsx               # New reflection
 │   │   ├── family.tsx                # Family settings
 │   │   ├── alder-wyn.tsx             # Chat with Alder Wyn
-│   │   └── _layout.tsx
+│   │   └── settings.tsx              # User settings
+│   ├── api/                          # API route handlers
+│   │   ├── alder-wyn/chat+api.ts
+│   │   └── research/submit+api.ts
 │   ├── relationship/
 │   │   └── [id].tsx                  # Relational heart detail view
-│   ├── collective.tsx                # Collective heart
-│   └── _layout.tsx                   # Root layout
+│   ├── research/                     # Research study forms
+│   │   ├── _layout.tsx
+│   │   ├── index.tsx
+│   │   ├── parent.tsx
+│   │   ├── teen.tsx
+│   │   ├── grandparent.tsx
+│   │   ├── adult-no-children.tsx
+│   │   └── thank-you.tsx
+│   ├── settings/                     # Settings sub-pages
+│   │   ├── change-email.tsx
+│   │   ├── change-password.tsx
+│   │   └── delete-account.tsx
+│   ├── _layout.tsx                   # Root layout
+│   └── +not-found.tsx
 ├── components/
 │   ├── ui/                           # Base UI components
-│   ├── relationship/
-│   │   ├── RelationshipCard.tsx
-│   │   ├── RelationshipList.tsx
-│   │   └── HealthIndicator.tsx
-│   ├── reflection/
-│   │   ├── ReflectionForm.tsx
-│   │   ├── ReflectionCard.tsx
-│   │   └── MoodPicker.tsx
-│   ├── alder-wyn/
+│   │   ├── Avatar.tsx
+│   │   ├── GlobalSnackbar.tsx
+│   │   ├── LoadingScreen.tsx
+│   │   └── index.ts
+│   ├── chat/                         # Chat UI (Alder Wyn)
 │   │   ├── ChatBubble.tsx
-│   │   ├── ChatInput.tsx
-│   │   └── TypingIndicator.tsx
-│   └── family/
-│       ├── FamilyMemberCard.tsx
-│       └── InviteCodeInput.tsx
+│   │   ├── MessageList.tsx
+│   │   └── index.ts
+│   ├── families/                     # Family management
+│   │   ├── FamilyCard.tsx
+│   │   ├── InviteDialog.tsx
+│   │   ├── PendingInviteBanner.tsx
+│   │   └── index.ts
+│   ├── reflections/                  # Reflection components
+│   │   ├── ReflectionCard.tsx
+│   │   ├── ReflectionForm.tsx
+│   │   └── index.ts
+│   ├── relationship/                 # Relationship components (planned)
+│   ├── onboarding/                   # Onboarding components
+│   │   ├── FeaturePreviewCard.tsx
+│   │   ├── ImportantPersonCard.tsx
+│   │   ├── JournalPrompt.tsx
+│   │   ├── OnboardingProgress.tsx
+│   │   ├── PhilosophyBanner.tsx
+│   │   ├── SkipLink.tsx
+│   │   ├── ValueChip.tsx
+│   │   └── index.ts
+│   └── research-forms/               # Research form components
+│       ├── ResearchForm.tsx
+│       ├── FormSection.tsx
+│       ├── SingleSelect.tsx
+│       ├── MultiSelect.tsx
+│       ├── ShortAnswer.tsx
+│       ├── ConsentCheckbox.tsx
+│       ├── SubmitButton.tsx
+│       └── index.ts
 ├── lib/
 │   ├── neon/
 │   │   ├── client.ts                 # Neon serverless client
-│   │   └── auth.ts                   # Auth helpers
+│   │   ├── auth.ts                   # Auth helpers
+│   │   ├── social-auth.ts            # Social auth helpers
+│   │   └── schema.sql                # SQL schema reference
 │   ├── sqlite/
 │   │   ├── db.ts                     # SQLite connection
-│   │   ├── schema.ts                 # Local schema definitions
-│   │   └── migrations/
-│   ├── sync/
-│   │   ├── sync-engine.ts            # Bidirectional sync logic
-│   │   ├── conflict-resolver.ts      # Conflict resolution
-│   │   └── queue.ts                  # Pending changes queue
-│   ├── alder-wyn/
-│   │   ├── context-assembler.ts
-│   │   ├── permission-filter.ts
-│   │   └── prompts.ts
+│   │   └── migrations/               # Local migrations (planned)
+│   ├── sync/                         # Sync engine (planned)
+│   ├── alder-wyn/                    # AI companion logic (planned)
+│   ├── research-forms/               # Research form definitions
+│   │   ├── parent-form.ts
+│   │   ├── teen-form.ts
+│   │   ├── grandparent-form.ts
+│   │   ├── adult-no-children-form.ts
+│   │   ├── types.ts
+│   │   └── index.ts
 │   ├── validations/                  # Zod schemas
-│   └── utils/
+│   │   └── index.ts
+│   ├── utils/
+│   │   └── query-client.ts           # TanStack Query config
+│   ├── health-score.ts               # Health score calculation
+│   └── theme.ts                      # React Native Paper theme
 ├── hooks/
-│   ├── use-family.ts
-│   ├── use-reflections.ts
-│   ├── use-relationships.ts
-│   ├── use-sync.ts                   # Sync status monitoring
-│   └── use-offline.ts                # Offline detection
+│   ├── use-auth-store.ts             # Zustand auth state
+│   ├── use-conversations.ts          # Alder Wyn conversations
+│   ├── use-families.ts               # Family data
+│   ├── use-onboarding-store.ts       # Zustand onboarding state
+│   ├── use-onboarding.ts             # Onboarding logic
+│   ├── use-profile.ts                # User profile
+│   ├── use-reflections.ts            # Reflections data
+│   ├── use-relationships.ts          # Relationships data
+│   └── use-snackbar.ts               # Snackbar notifications
 ├── types/
-│   └── index.ts
-├── api/                              # Backend API handlers
-│   ├── reflections.ts
-│   ├── relationships.ts
-│   ├── family.ts
-│   ├── alder-wyn.ts
-│   ├── sharing.ts
-│   └── sync.ts
+│   ├── database.ts                   # Neon database types
+│   └── index.ts                      # Application types
 ├── neon/
-│   ├── migrations/
-│   └── seed.sql
+│   └── migrations/                   # Neon schema migrations
+├── supabase/
+│   └── functions/                    # Edge functions
+│       └── send-invite/index.ts
+├── docs/                             # Documentation
+│   ├── technical-spec.md
+│   ├── roadmap.md
+│   └── market-research/
 ├── app.json                          # Expo configuration
 ├── eas.json                          # EAS Build configuration
 └── package.json

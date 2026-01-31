@@ -128,6 +128,22 @@ export interface AlderWynMessage {
   timestamp: string;
 }
 
+// Family invite types
+export interface FamilyInvite {
+  id: string;
+  familyId: string;
+  invitedBy: string;
+  invitedEmail: string;
+  status: 'pending' | 'accepted' | 'expired';
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface PendingInviteInfo extends FamilyInvite {
+  familyName: string;
+  inviterName: string;
+}
+
 // Sync types
 export type SyncStatus = 'pending' | 'synced' | 'conflict';
 

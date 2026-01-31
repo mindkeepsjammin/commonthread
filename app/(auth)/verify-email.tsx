@@ -45,27 +45,27 @@ export default function VerifyEmailScreen() {
         />
       </View>
 
-      <Text variant="headlineLarge" className="mb-2 text-center">
+      <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
         Verify Your Email
       </Text>
-      <Text variant="bodyLarge" className="mb-2 text-center text-neutral-500">
+      <Text variant="bodyLarge" className="mb-2 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
         We've sent a verification link to:
       </Text>
       {user?.email && (
-        <Text variant="bodyLarge" className="mb-8 text-center font-bold">
+        <Text variant="bodyLarge" className="mb-8 text-center font-bold" style={{ color: theme.colors.onBackground }}>
           {user.email}
         </Text>
       )}
 
       {error && (
-        <View className="mb-4 rounded-lg bg-red-100 p-3">
-          <Text className="text-red-700">{error}</Text>
+        <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+          <Text style={{ color: theme.colors.error }}>{error}</Text>
         </View>
       )}
 
       {resent && (
-        <View className="mb-4 rounded-lg bg-green-100 p-3">
-          <Text className="text-green-700">Verification email resent.</Text>
+        <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.secondaryContainer }}>
+          <Text style={{ color: theme.colors.secondary }}>Verification email resent.</Text>
         </View>
       )}
 

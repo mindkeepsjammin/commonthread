@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Text, Button, TextInput, Dialog, Portal } from 'react-native-paper';
+import { Text, Button, TextInput, Dialog, Portal, useTheme } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useTheme } from 'react-native-paper';
 import { signOut } from '@/lib/neon/auth';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import { queryClient } from '@/lib/utils/query-client';
@@ -21,16 +20,26 @@ export default function DeleteAccountScreen() {
     setIsDeleting(true);
     setError(null);
 
-    // Note: Supabase client SDK cannot delete users directly.
-    // This requires a Supabase Edge Function or server-side endpoint.
-    // For now, we sign the user out and show a message.
-    // TODO: Implement server-side account deletion endpoint
     try {
+      const userId = useAuthStore.getState().user?.id;
+      if (!userId) throw new Error('No user found');
+
+      const response = await fetch('/api/account/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Deletion failed');
+      }
+
       await signOut();
       queryClient.clear();
       reset();
-    } catch {
-      setError('Failed to delete account. Please contact support.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete account. Please contact support.');
       setIsDeleting(false);
       setShowDialog(false);
     }
@@ -42,21 +51,21 @@ export default function DeleteAccountScreen() {
         <MaterialCommunityIcons name="alert-circle-outline" size={64} color="#dc2626" />
       </View>
 
-      <Text variant="headlineMedium" className="mb-2 text-center">
+      <Text variant="headlineMedium" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
         Delete Account
       </Text>
-      <Text variant="bodyMedium" className="mb-6 text-center text-neutral-500">
+      <Text variant="bodyMedium" className="mb-6 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
         This action is permanent and cannot be undone. All your data, reflections, and family
         connections will be permanently removed.
       </Text>
 
       {error && (
-        <View className="mb-4 rounded-lg bg-red-100 p-3">
-          <Text className="text-red-700">{error}</Text>
+        <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+          <Text style={{ color: theme.colors.error }}>{error}</Text>
         </View>
       )}
 
-      <Text variant="bodyMedium" className="mb-2">
+      <Text variant="bodyMedium" className="mb-2" style={{ color: theme.colors.onSurface }}>
         Type DELETE to confirm:
       </Text>
       <TextInput

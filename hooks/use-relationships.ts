@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import { calculateHealthScore } from '@/lib/health-score';
-import type { Relationship, RelationalHeart, CommonThread } from '@/types';
+import type { CommonThread } from '@/types';
 
 const RELATIONSHIPS_QUERY_KEY = ['relationships'];
 
@@ -162,6 +162,34 @@ export function useCheckIn() {
       `;
 
       return { healthScore: newScore };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });
+    },
+  });
+}
+
+export function useDiscoverThreads() {
+  const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+
+  return useMutation({
+    mutationFn: async (relationshipId: string): Promise<CommonThread[]> => {
+      if (!user?.id) throw new Error('Not authenticated');
+
+      const response = await fetch('/api/common-threads/discover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ relationshipId, userId: user.id }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Discovery failed');
+      }
+
+      const { threads } = await response.json();
+      return threads as CommonThread[];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });

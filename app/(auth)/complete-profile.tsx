@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import { Text, TextInput, Button, SegmentedButtons, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, SegmentedButtons, HelperText, useTheme } from 'react-native-paper';
 import { router, Href } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,7 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function CompleteProfileScreen() {
+  const theme = useTheme();
   const [error, setError] = useState<string | null>(null);
   const createProfile = useCreateProfile();
 
@@ -50,12 +51,12 @@ export default function CompleteProfileScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-neutral-50">
+    <ScrollView className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="flex-1 p-6 pt-16">
-        <Text variant="headlineLarge" className="mb-2 text-center">
+        <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
           Complete Your Profile
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
+        <Text variant="bodyLarge" className="mb-8 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
           Tell us a bit about yourself
         </Text>
 
@@ -64,8 +65,8 @@ export default function CompleteProfileScreen() {
         </View>
 
         {error && (
-          <View className="mb-4 rounded-lg bg-red-100 p-3">
-            <Text className="text-red-700">{error}</Text>
+          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+            <Text style={{ color: theme.colors.error }}>{error}</Text>
           </View>
         )}
 
@@ -93,10 +94,10 @@ export default function CompleteProfileScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleMedium" className="mb-3">
+          <Text variant="titleMedium" className="mb-3" style={{ color: theme.colors.onBackground }}>
             Life Stage
           </Text>
-          <Text variant="bodySmall" className="mb-3 text-neutral-500">
+          <Text variant="bodySmall" className="mb-3" style={{ color: theme.colors.onSurfaceVariant }}>
             This helps personalize your experience
           </Text>
           <Controller

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, ScrollView, Pressable } from 'react-native';
-import { Text, Button, Dialog, Portal, Avatar, Divider } from 'react-native-paper';
+import { Text, Button, Dialog, Portal, Avatar, Divider, useTheme } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { router, Href } from 'expo-router';
 import { useAuthStore } from '@/hooks/use-auth-store';
@@ -9,6 +9,7 @@ import { signOut } from '@/lib/neon/auth';
 import { queryClient } from '@/lib/utils/query-client';
 
 export default function SettingsScreen() {
+  const theme = useTheme();
   const { profile } = useAuthStore();
   const { data: profileData } = useProfile();
   const { reset } = useAuthStore();
@@ -30,66 +31,69 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-neutral-50">
+    <ScrollView className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="p-4">
-        <View className="mb-6 items-center rounded-lg bg-white p-6">
+        <View className="mb-6 items-center rounded-lg p-6" style={{ backgroundColor: theme.colors.surface }}>
           <Avatar.Text
             size={72}
             label={displayProfile?.displayName?.charAt(0)?.toUpperCase() ?? '?'}
           />
-          <Text variant="titleLarge" className="mt-3">
+          <Text variant="titleLarge" className="mt-3" style={{ color: theme.colors.onBackground }}>
             {displayProfile?.displayName ?? 'User'}
           </Text>
           {displayProfile?.role && (
-            <Text variant="bodyMedium" className="text-neutral-500 capitalize">
+            <Text variant="bodyMedium" className="capitalize" style={{ color: theme.colors.onSurfaceVariant }}>
               {displayProfile.role}
             </Text>
           )}
         </View>
 
-        <Text variant="titleMedium" className="mb-2 mt-2">
+        <Text variant="titleMedium" className="mb-2 mt-2" style={{ color: theme.colors.onBackground }}>
           Account
         </Text>
 
         <Pressable
           onPress={() => router.push('/settings/change-password' as Href)}
-          className="flex-row items-center justify-between rounded-lg bg-white p-4 mb-2"
+          className="flex-row items-center justify-between rounded-lg p-4 mb-2"
+          style={{ backgroundColor: theme.colors.surface }}
         >
           <View className="flex-row items-center">
-            <MaterialCommunityIcons name="lock-outline" size={22} color="#666" />
-            <Text variant="bodyLarge" className="ml-3">Change Password</Text>
+            <MaterialCommunityIcons name="lock-outline" size={22} color={theme.colors.onSurfaceVariant} />
+            <Text variant="bodyLarge" className="ml-3" style={{ color: theme.colors.onSurface }}>Change Password</Text>
           </View>
-          <MaterialCommunityIcons name="chevron-right" size={22} color="#999" />
+          <MaterialCommunityIcons name="chevron-right" size={22} color={theme.colors.outline} />
         </Pressable>
 
         <Pressable
           onPress={() => router.push('/settings/change-email' as Href)}
-          className="flex-row items-center justify-between rounded-lg bg-white p-4 mb-2"
+          className="flex-row items-center justify-between rounded-lg p-4 mb-2"
+          style={{ backgroundColor: theme.colors.surface }}
         >
           <View className="flex-row items-center">
-            <MaterialCommunityIcons name="email-outline" size={22} color="#666" />
-            <Text variant="bodyLarge" className="ml-3">Change Email</Text>
+            <MaterialCommunityIcons name="email-outline" size={22} color={theme.colors.onSurfaceVariant} />
+            <Text variant="bodyLarge" className="ml-3" style={{ color: theme.colors.onSurface }}>Change Email</Text>
           </View>
-          <MaterialCommunityIcons name="chevron-right" size={22} color="#999" />
+          <MaterialCommunityIcons name="chevron-right" size={22} color={theme.colors.outline} />
         </Pressable>
 
         <Divider className="my-4" />
 
         <Pressable
           onPress={() => router.push('/settings/delete-account' as Href)}
-          className="flex-row items-center justify-between rounded-lg bg-white p-4 mb-4"
+          className="flex-row items-center justify-between rounded-lg p-4 mb-4"
+          style={{ backgroundColor: theme.colors.surface }}
         >
           <View className="flex-row items-center">
-            <MaterialCommunityIcons name="account-remove-outline" size={22} color="#dc2626" />
-            <Text variant="bodyLarge" className="ml-3 text-red-600">Delete Account</Text>
+            <MaterialCommunityIcons name="account-remove-outline" size={22} color={theme.colors.error} />
+            <Text variant="bodyLarge" className="ml-3" style={{ color: theme.colors.error }}>Delete Account</Text>
           </View>
-          <MaterialCommunityIcons name="chevron-right" size={22} color="#999" />
+          <MaterialCommunityIcons name="chevron-right" size={22} color={theme.colors.outline} />
         </Pressable>
 
         <Button
           mode="outlined"
           onPress={() => setShowSignOutDialog(true)}
-          textColor="#dc2626"
+          textColor={theme.colors.error}
           icon="logout"
         >
           Sign Out
@@ -100,7 +104,7 @@ export default function SettingsScreen() {
         <Dialog visible={showSignOutDialog} onDismiss={() => setShowSignOutDialog(false)}>
           <Dialog.Title>Sign Out</Dialog.Title>
           <Dialog.Content>
-            <Text variant="bodyMedium">Are you sure you want to sign out?</Text>
+            <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>Are you sure you want to sign out?</Text>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setShowSignOutDialog(false)} disabled={isSigningOut}>
@@ -110,7 +114,7 @@ export default function SettingsScreen() {
               onPress={handleSignOut}
               loading={isSigningOut}
               disabled={isSigningOut}
-              textColor="#dc2626"
+              textColor={theme.colors.error}
             >
               Sign Out
             </Button>

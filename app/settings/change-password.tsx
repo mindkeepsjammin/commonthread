@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +9,7 @@ import { signInWithEmail, updatePassword } from '@/lib/neon/auth';
 import { useAuthStore } from '@/hooks/use-auth-store';
 
 export default function ChangePasswordScreen() {
+  const theme = useTheme();
   const { user } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -60,19 +61,19 @@ export default function ChangePasswordScreen() {
       className="flex-1"
     >
       <View className="flex-1 p-6">
-        <Text variant="headlineMedium" className="mb-6">
+        <Text variant="headlineMedium" className="mb-6" style={{ color: theme.colors.onBackground }}>
           Change Password
         </Text>
 
         {error && (
-          <View className="mb-4 rounded-lg bg-red-100 p-3">
-            <Text className="text-red-700">{error}</Text>
+          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+            <Text style={{ color: theme.colors.error }}>{error}</Text>
           </View>
         )}
 
         {success && (
-          <View className="mb-4 rounded-lg bg-green-100 p-3">
-            <Text className="text-green-700">Password updated successfully.</Text>
+          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.secondaryContainer }}>
+            <Text style={{ color: theme.colors.secondary }}>Password updated successfully.</Text>
           </View>
         )}
 

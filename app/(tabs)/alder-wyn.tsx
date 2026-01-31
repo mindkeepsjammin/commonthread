@@ -1,8 +1,9 @@
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import MessageList from '@/components/chat/MessageList';
-import { useSendMessage } from '@/hooks/use-conversations';
+import ContextSelector from '@/components/chat/ContextSelector';
+import { useSendMessage, useConversationHistory } from '@/hooks/use-conversations';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import type { AlderWynMessage } from '@/types';
 
@@ -10,8 +11,34 @@ export default function AlderWynScreen() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<AlderWynMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | undefined>();
+  const [contextType, setContextType] = useState<
+    'personal' | 'relational' | 'collective'
+  >('personal');
   const { user } = useAuthStore();
   const sendMutation = useSendMessage();
+
+  const { data: conversation, isLoading: isLoadingHistory } =
+    useConversationHistory(
+      user?.id ? { userId: user.id, contextType } : null
+    );
+
+  // Initialize messages from history when conversation loads or context changes
+  useEffect(() => {
+    if (conversation) {
+      setConversationId(conversation.id);
+      setMessages(conversation.messages);
+    } else {
+      setConversationId(undefined);
+      setMessages([]);
+    }
+  }, [conversation]);
+
+  const handleContextChange = useCallback(
+    (newContextType: 'personal' | 'relational' | 'collective') => {
+      setContextType(newContextType);
+    },
+    []
+  );
 
   const handleSend = useCallback(() => {
     const text = message.trim();
@@ -27,7 +54,7 @@ export default function AlderWynScreen() {
     setMessage('');
 
     sendMutation.mutate(
-      { conversationId, message: text, userId: user.id },
+      { conversationId, message: text, userId: user.id, contextType },
       {
         onSuccess: (data) => {
           setConversationId(data.conversationId);
@@ -45,7 +72,7 @@ export default function AlderWynScreen() {
         },
       }
     );
-  }, [message, user, conversationId, sendMutation]);
+  }, [message, user, conversationId, contextType, sendMutation]);
 
   return (
     <KeyboardAvoidingView
@@ -53,7 +80,15 @@ export default function AlderWynScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={90}
     >
-      <MessageList messages={messages} isLoading={sendMutation.isPending} />
+      <ContextSelector
+        contextType={contextType}
+        onContextTypeChange={handleContextChange}
+      />
+
+      <MessageList
+        messages={messages}
+        isLoading={sendMutation.isPending || isLoadingHistory}
+      />
 
       <View className="flex-row items-center border-t border-neutral-200 bg-white p-2">
         <TextInput

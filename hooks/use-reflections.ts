@@ -12,8 +12,9 @@ async function updateHealthScoresForSharing(
   currentUserId: string,
   reflectionId: string,
   sharedWith: string[],
-) {
-  if (sharedWith.length === 0) return;
+): Promise<string[]> {
+  const relationshipIdsForDiscovery: string[] = [];
+  if (sharedWith.length === 0) return relationshipIdsForDiscovery;
 
   for (const otherUserId of sharedWith) {
     // Find the relationship between these two users
@@ -53,6 +54,24 @@ async function updateHealthScoresForSharing(
         last_check_in = ${now}
       WHERE id = ${row.heart_id}
     `;
+
+    if (updatedRefs.length >= 3) {
+      relationshipIdsForDiscovery.push(row.relationship_id);
+    }
+  }
+
+  return relationshipIdsForDiscovery;
+}
+
+function triggerCommonThreadsDiscovery(relationshipIds: string[], userId: string) {
+  for (const relationshipId of relationshipIds) {
+    fetch('/api/common-threads/discover', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ relationshipId, userId }),
+    }).catch(() => {
+      // Fire-and-forget: discovery failure is non-critical
+    });
   }
 }
 
@@ -142,7 +161,8 @@ export function useCreateReflection() {
       const reflection = mapRowToReflection(result[0] as ReflectionRow);
 
       if (input.sharedWith && input.sharedWith.length > 0) {
-        await updateHealthScoresForSharing(user.id, reflection.id, input.sharedWith);
+        const discoveryIds = await updateHealthScoresForSharing(user.id, reflection.id, input.sharedWith);
+        triggerCommonThreadsDiscovery(discoveryIds, user.id);
       }
 
       return reflection;
@@ -183,7 +203,8 @@ export function useUpdateReflection() {
       const reflection = mapRowToReflection(result[0] as ReflectionRow);
 
       if (updates.sharedWith && updates.sharedWith.length > 0) {
-        await updateHealthScoresForSharing(user.id, reflection.id, updates.sharedWith);
+        const discoveryIds = await updateHealthScoresForSharing(user.id, reflection.id, updates.sharedWith);
+        triggerCommonThreadsDiscovery(discoveryIds, user.id);
       }
 
       return reflection;

@@ -128,7 +128,7 @@ export default function SelfPortraitScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             What season of life are you in?
           </Text>
           <View className="flex-row flex-wrap">
@@ -161,7 +161,7 @@ export default function SelfPortraitScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             Values you hold close
           </Text>
           <Text
@@ -193,7 +193,7 @@ export default function SelfPortraitScreen() {
         />
 
         <View className="mb-6">
-          <Text variant="titleSmall" className="mb-2">
+          <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
             How do you like to connect?
           </Text>
           <Text

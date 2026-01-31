@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Card, Text, Chip, IconButton, Menu } from 'react-native-paper';
+import { Card, Text, Chip, IconButton, Menu, useTheme } from 'react-native-paper';
 import type { Reflection } from '@/types';
 
 const TYPE_LABELS: Record<Reflection['type'], string> = {
@@ -13,10 +13,14 @@ const TYPE_LABELS: Record<Reflection['type'], string> = {
 interface ReflectionCardProps {
   reflection: Reflection;
   onPress: () => void;
-  onDelete: () => void;
+  onDelete?: () => void;
+  authorName?: string;
+  showAuthor?: boolean;
+  sharedWithNames?: string[];
 }
 
-export function ReflectionCard({ reflection, onPress, onDelete }: ReflectionCardProps) {
+export function ReflectionCard({ reflection, onPress, onDelete, authorName, showAuthor, sharedWithNames }: ReflectionCardProps) {
+  const theme = useTheme();
   const [menuVisible, setMenuVisible] = useState(false);
 
   const contentPreview =
@@ -39,44 +43,54 @@ export function ReflectionCard({ reflection, onPress, onDelete }: ReflectionCard
               {TYPE_LABELS[reflection.type]}
             </Chip>
             {reflection.moodScore != null && (
-              <Text variant="bodySmall" className="text-neutral-400">
+              <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
                 Mood: {reflection.moodScore}/10
               </Text>
             )}
           </View>
-          <Menu
-            visible={menuVisible}
-            onDismiss={() => setMenuVisible(false)}
-            anchor={
-              <IconButton
-                icon="dots-vertical"
-                size={18}
-                onPress={() => setMenuVisible(true)}
+          {onDelete && (
+            <Menu
+              visible={menuVisible}
+              onDismiss={() => setMenuVisible(false)}
+              anchor={
+                <IconButton
+                  icon="dots-vertical"
+                  size={18}
+                  onPress={() => setMenuVisible(true)}
+                />
+              }
+            >
+              <Menu.Item
+                onPress={() => {
+                  setMenuVisible(false);
+                  onDelete();
+                }}
+                title="Delete"
+                leadingIcon="delete-outline"
               />
-            }
-          >
-            <Menu.Item
-              onPress={() => {
-                setMenuVisible(false);
-                onDelete();
-              }}
-              title="Delete"
-              leadingIcon="delete-outline"
-            />
-          </Menu>
+            </Menu>
+          )}
         </View>
+
+        {showAuthor && authorName && (
+          <Text variant="bodySmall" className="mb-1" style={{ color: theme.colors.primary }}>
+            By {authorName}
+          </Text>
+        )}
 
         <Text variant="bodyMedium" className="mb-2">
           {contentPreview}
         </Text>
 
         <View className="flex-row items-center justify-between">
-          <Text variant="bodySmall" className="text-neutral-400">
+          <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
             {dateStr}
           </Text>
           {reflection.isShareable && (
-            <Text variant="bodySmall" className="text-neutral-400">
-              Shared
+            <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
+              {sharedWithNames && sharedWithNames.length > 0
+                ? `Shared with ${sharedWithNames.join(', ')}`
+                : 'Shared'}
             </Text>
           )}
         </View>

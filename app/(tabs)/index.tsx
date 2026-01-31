@@ -1,5 +1,5 @@
 import { View, ScrollView } from 'react-native';
-import { Text, Card, Button, Chip, ActivityIndicator } from 'react-native-paper';
+import { Text, Card, Button, Chip, ActivityIndicator, useTheme } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useProfile } from '@/hooks/use-profile';
 import { useReflections } from '@/hooks/use-reflections';
@@ -14,6 +14,7 @@ const TYPE_LABELS: Record<Reflection['type'], string> = {
 };
 
 export default function HomeScreen() {
+  const theme = useTheme();
   const { data: profile } = useProfile();
   const { data: reflections, isLoading: reflectionsLoading } = useReflections();
   const { data: families, isLoading: familiesLoading } = useFamilies();
@@ -23,12 +24,12 @@ export default function HomeScreen() {
   const hasReflections = recentReflections.length > 0;
 
   return (
-    <ScrollView className="flex-1 bg-neutral-50">
+    <ScrollView className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="px-5 pb-8 pt-6">
-        <Text variant="headlineMedium" className="mb-1 text-neutral-900">
+        <Text variant="headlineMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
           Welcome back{profile?.displayName ? `, ${profile.displayName}` : ''}
         </Text>
-        <Text variant="bodyMedium" className="mb-5 text-neutral-500">
+        <Text variant="bodyMedium" className="mb-5" style={{ color: theme.colors.onSurfaceVariant }}>
           Your family connections at a glance
         </Text>
 
@@ -55,7 +56,7 @@ export default function HomeScreen() {
         <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
           <View className="h-1.5 bg-primary-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1 text-neutral-900">
+            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
               Your Families
             </Text>
             {familiesLoading ? (
@@ -68,10 +69,10 @@ export default function HomeScreen() {
                     className="flex-row items-center justify-between py-2 border-b border-neutral-100"
                   >
                     <View>
-                      <Text variant="bodyMedium" className="text-neutral-900">
+                      <Text variant="bodyMedium" style={{ color: theme.colors.onBackground }}>
                         {family.name}
                       </Text>
-                      <Text variant="bodySmall" className="text-neutral-400">
+                      <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
                         {family.memberCount} {family.memberCount === 1 ? 'member' : 'members'}
                       </Text>
                     </View>
@@ -82,7 +83,7 @@ export default function HomeScreen() {
                 ))}
               </View>
             ) : (
-              <Text variant="bodyMedium" className="text-neutral-500">
+              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
                 No families yet. Join or create a family to start connecting.
               </Text>
             )}
@@ -100,7 +101,7 @@ export default function HomeScreen() {
         <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
           <View className="h-1.5 bg-secondary-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1 text-neutral-900">
+            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
               Recent Reflections
             </Text>
             {reflectionsLoading ? (
@@ -126,11 +127,11 @@ export default function HomeScreen() {
                         <Chip compact textStyle={{ fontSize: 11 }}>
                           {TYPE_LABELS[reflection.type]}
                         </Chip>
-                        <Text variant="bodySmall" className="text-neutral-400">
+                        <Text variant="bodySmall" style={{ color: theme.colors.outline }}>
                           {dateStr}
                         </Text>
                       </View>
-                      <Text variant="bodyMedium" className="text-neutral-700">
+                      <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
                         {preview}
                       </Text>
                     </View>
@@ -138,7 +139,7 @@ export default function HomeScreen() {
                 })}
               </View>
             ) : (
-              <Text variant="bodyMedium" className="text-neutral-500">
+              <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
                 Start journaling to see your recent reflections here.
               </Text>
             )}
@@ -157,10 +158,10 @@ export default function HomeScreen() {
         <Card mode="outlined" className="mb-5 overflow-hidden rounded-2xl border-neutral-200">
           <View className="h-1.5 bg-accent-400" />
           <Card.Content className="pt-5">
-            <Text variant="titleMedium" className="mb-1 text-neutral-900">
+            <Text variant="titleMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
               Chat with Alder Wyn
             </Text>
-            <Text variant="bodyMedium" className="text-neutral-500">
+            <Text variant="bodyMedium" style={{ color: theme.colors.onSurfaceVariant }}>
               Your gentle AI companion for reflection and growth.
             </Text>
           </Card.Content>

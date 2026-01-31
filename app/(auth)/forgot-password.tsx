@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { Link, router, Href } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import { resetPasswordSchema, type ResetPasswordInput } from '@/lib/validations'
 import { resetPassword } from '@/lib/neon/auth';
 
 export default function ForgotPasswordScreen() {
+  const theme = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,16 +47,16 @@ export default function ForgotPasswordScreen() {
       className="flex-1"
     >
       <View className="flex-1 justify-center p-6">
-        <Text variant="headlineLarge" className="mb-2 text-center">
+        <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
           Reset Password
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
+        <Text variant="bodyLarge" className="mb-8 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
           Enter your email and we'll send you a reset link
         </Text>
 
         {error && (
-          <View className="mb-4 rounded-lg bg-red-100 p-3">
-            <Text className="text-red-700">{error}</Text>
+          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+            <Text style={{ color: theme.colors.error }}>{error}</Text>
           </View>
         )}
 

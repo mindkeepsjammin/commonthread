@@ -33,7 +33,7 @@ export default function FamilyPreviewScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="items-center mb-6">
-          <Text variant="headlineMedium" className="text-center mb-2">
+          <Text variant="headlineMedium" className="text-center mb-2" style={{ color: theme.colors.onBackground }}>
             Your Family Map Awaits
           </Text>
           <Text

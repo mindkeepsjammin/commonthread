@@ -16,12 +16,12 @@ export const SingleSelect = ({
 }: SingleSelectProps) => {
   return (
     <View className="mb-6">
-      <Text className="text-base font-medium text-gray-900 mb-1">
+      <Text className="text-base font-medium text-neutral-900 mb-1">
         {question.question}
         {question.required && <Text className="text-red-500"> *</Text>}
       </Text>
       {question.hint && (
-        <Text className="text-sm text-gray-500 mb-3">{question.hint}</Text>
+        <Text className="text-sm text-neutral-500 mb-3">{question.hint}</Text>
       )}
       <View className="space-y-2">
         {question.options?.map((option) => (
@@ -31,14 +31,14 @@ export const SingleSelect = ({
             className={`flex-row items-center p-3 rounded-lg border ${
               value === option.value
                 ? 'border-primary-500 bg-primary-50'
-                : 'border-gray-200 bg-white'
+                : 'border-neutral-200 bg-white'
             }`}
           >
             <View
               className={`w-5 h-5 rounded-full border-2 mr-3 items-center justify-center ${
                 value === option.value
                   ? 'border-primary-500'
-                  : 'border-gray-300'
+                  : 'border-neutral-300'
               }`}
             >
               {value === option.value && (
@@ -47,7 +47,7 @@ export const SingleSelect = ({
             </View>
             <Text
               className={`text-base ${
-                value === option.value ? 'text-primary-700' : 'text-gray-700'
+                value === option.value ? 'text-primary-700' : 'text-neutral-700'
               }`}
             >
               {option.label}

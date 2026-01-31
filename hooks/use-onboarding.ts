@@ -26,6 +26,13 @@ export function useUpdateOnboarding() {
 
       const now = new Date().toISOString();
 
+      // Ensure profile exists (no DB trigger to auto-create on signup)
+      await getSql()`
+        INSERT INTO profiles (id, display_name)
+        VALUES (${user.id}, 'New User')
+        ON CONFLICT (id) DO NOTHING
+      `;
+
       // Handle self portrait update with merge
       if (params.selfPortrait) {
         const currentResult = await getSql()`

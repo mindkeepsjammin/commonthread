@@ -49,7 +49,7 @@ export default function ForgotPasswordScreen() {
         <Text variant="headlineLarge" className="mb-2 text-center">
           Reset Password
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-gray-500">
+        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
           Enter your email and we'll send you a reset link
         </Text>
 

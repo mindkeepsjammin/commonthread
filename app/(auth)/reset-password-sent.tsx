@@ -21,7 +21,7 @@ export default function ResetPasswordSentScreen() {
       <Text variant="headlineLarge" className="mb-2 text-center">
         Check Your Email
       </Text>
-      <Text variant="bodyLarge" className="mb-2 text-center text-gray-500">
+      <Text variant="bodyLarge" className="mb-2 text-center text-neutral-500">
         We've sent a password reset link to:
       </Text>
       {email && (
@@ -29,7 +29,7 @@ export default function ResetPasswordSentScreen() {
           {email}
         </Text>
       )}
-      <Text variant="bodyMedium" className="mb-8 text-center text-gray-400">
+      <Text variant="bodyMedium" className="mb-8 text-center text-neutral-400">
         If you don't see the email, check your spam folder.
       </Text>
 

@@ -30,12 +30,12 @@ export const MultiSelect = ({
 
   return (
     <View className="mb-6">
-      <Text className="text-base font-medium text-gray-900 mb-1">
+      <Text className="text-base font-medium text-neutral-900 mb-1">
         {question.question}
         {question.required && <Text className="text-red-500"> *</Text>}
       </Text>
       {question.hint && (
-        <Text className="text-sm text-gray-500 mb-3">{question.hint}</Text>
+        <Text className="text-sm text-neutral-500 mb-3">{question.hint}</Text>
       )}
       <View className="space-y-2">
         {question.options?.map((option) => {
@@ -51,8 +51,8 @@ export const MultiSelect = ({
                 isSelected
                   ? 'border-primary-500 bg-primary-50'
                   : isDisabled
-                    ? 'border-gray-100 bg-gray-50'
-                    : 'border-gray-200 bg-white'
+                    ? 'border-neutral-100 bg-neutral-50'
+                    : 'border-neutral-200 bg-white'
               }`}
             >
               <View
@@ -60,8 +60,8 @@ export const MultiSelect = ({
                   isSelected
                     ? 'border-primary-500 bg-primary-500'
                     : isDisabled
-                      ? 'border-gray-200'
-                      : 'border-gray-300'
+                      ? 'border-neutral-200'
+                      : 'border-neutral-300'
                 }`}
               >
                 {isSelected && (
@@ -73,8 +73,8 @@ export const MultiSelect = ({
                   isSelected
                     ? 'text-primary-700'
                     : isDisabled
-                      ? 'text-gray-400'
-                      : 'text-gray-700'
+                      ? 'text-neutral-400'
+                      : 'text-neutral-700'
                 }`}
               >
                 {option.label}

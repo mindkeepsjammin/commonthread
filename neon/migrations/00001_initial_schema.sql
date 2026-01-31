@@ -1,9 +1,9 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
--- Users profiles (linked to auth system)
+-- Users profiles (id matches Supabase auth user id)
 CREATE TABLE public.profiles (
-  id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   display_name TEXT NOT NULL,
   avatar_url TEXT,
   date_of_birth DATE,
@@ -96,30 +96,10 @@ CREATE INDEX idx_family_memberships_user_id ON public.family_memberships(user_id
 CREATE INDEX idx_family_memberships_family_id ON public.family_memberships(family_id);
 CREATE INDEX idx_relationships_users ON public.relationships(user_a, user_b);
 
--- Enable Row Level Security
-ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.families ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.family_memberships ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.reflections ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.relationships ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.relational_hearts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.alder_wyn_conversations ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.sharing_settings ENABLE ROW LEVEL SECURITY;
-
--- Function to auto-create profile on signup
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.profiles (id, display_name)
-  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'display_name', 'New User'));
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Trigger for new user signup
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+-- Note: RLS is NOT enabled on Neon standalone.
+-- Access control is handled at the application layer.
+-- Supabase auth trigger is not needed here; profiles are created by the app
+-- when a user signs up via Supabase Auth.
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()

@@ -1,36 +1,61 @@
-import { View, ScrollView } from 'react-native';
-import { Text, Card, TextInput } from 'react-native-paper';
-import { useState } from 'react';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { useState, useCallback } from 'react';
+import MessageList from '@/components/chat/MessageList';
+import { useSendMessage } from '@/hooks/use-conversations';
+import { useAuthStore } from '@/hooks/use-auth-store';
+import type { AlderWynMessage } from '@/types';
 
 export default function AlderWynScreen() {
   const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<AlderWynMessage[]>([]);
+  const [conversationId, setConversationId] = useState<string | undefined>();
+  const { user } = useAuthStore();
+  const sendMutation = useSendMessage();
+
+  const handleSend = useCallback(() => {
+    const text = message.trim();
+    if (!text || !user || sendMutation.isPending) return;
+
+    const userMessage: AlderWynMessage = {
+      role: 'user',
+      content: text,
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setMessage('');
+
+    sendMutation.mutate(
+      { conversationId, message: text, userId: user.id },
+      {
+        onSuccess: (data) => {
+          setConversationId(data.conversationId);
+          setMessages((prev) => [...prev, data.reply]);
+        },
+        onError: () => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: 'assistant',
+              content: 'I had trouble responding. Please try again.',
+              timestamp: new Date().toISOString(),
+            },
+          ]);
+        },
+      }
+    );
+  }, [message, user, conversationId, sendMutation]);
 
   return (
-    <View className="flex-1 bg-gray-50">
-      <ScrollView className="flex-1 p-4">
-        <Card className="mb-4">
-          <Card.Content>
-            <Text variant="titleMedium" className="mb-2">
-              Alder Wyn
-            </Text>
-            <Text variant="bodyMedium" className="mb-4 text-gray-600">
-              I'm here to help you reflect on your experiences and relationships. I'm not a
-              therapist, but I can help you explore your thoughts and feelings.
-            </Text>
-            <Text variant="bodySmall" className="italic text-gray-500">
-              "What's been on your mind lately?"
-            </Text>
-          </Card.Content>
-        </Card>
+    <KeyboardAvoidingView
+      className="flex-1 bg-neutral-50"
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={90}
+    >
+      <MessageList messages={messages} isLoading={sendMutation.isPending} />
 
-        <View className="items-center py-8">
-          <Text variant="bodyMedium" className="text-center text-gray-500">
-            Start a conversation by typing a message below
-          </Text>
-        </View>
-      </ScrollView>
-
-      <View className="flex-row items-center border-t border-gray-200 bg-white p-2">
+      <View className="flex-row items-center border-t border-neutral-200 bg-white p-2">
         <TextInput
           mode="outlined"
           placeholder="Type a message..."
@@ -38,17 +63,16 @@ export default function AlderWynScreen() {
           onChangeText={setMessage}
           className="flex-1"
           dense
+          onSubmitEditing={handleSend}
           right={
             <TextInput.Icon
               icon="send"
-              onPress={() => {
-                // TODO: Send message to Alder Wyn
-                setMessage('');
-              }}
+              disabled={!message.trim() || sendMutation.isPending}
+              onPress={handleSend}
             />
           }
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

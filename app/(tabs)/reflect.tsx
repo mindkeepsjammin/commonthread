@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import { Text, FAB, Card, Chip, Portal, Modal, Dialog, Button } from 'react-native-paper';
 import { useReflections, useCreateReflection, useUpdateReflection, useDeleteReflection } from '@/hooks/use-reflections';
+import { useFamilies, useFamilyMembers } from '@/hooks/use-families';
+import { useAuthStore } from '@/hooks/use-auth-store';
 import { ReflectionCard, ReflectionForm } from '@/components/reflections';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import type { Reflection } from '@/types';
@@ -22,7 +24,14 @@ export default function ReflectScreen() {
   const [editingReflection, setEditingReflection] = useState<Reflection | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
+  const { user } = useAuthStore();
   const { data: reflections, isLoading } = useReflections(filter);
+  const { data: families } = useFamilies();
+  const firstFamilyId = families?.[0]?.id ?? null;
+  const { data: members } = useFamilyMembers(firstFamilyId);
+  const familyMembers = (members ?? [])
+    .filter(m => m.userId !== user?.id)
+    .map(m => ({ userId: m.userId, displayName: m.displayName }));
   const createMutation = useCreateReflection();
   const updateMutation = useUpdateReflection();
   const deleteMutation = useDeleteReflection();
@@ -61,12 +70,12 @@ export default function ReflectScreen() {
   };
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-neutral-50">
       <View className="p-4 pb-0">
         <Text variant="headlineMedium" className="mb-2">
           Your Reflections
         </Text>
-        <Text variant="bodyMedium" className="mb-4 text-gray-500">
+        <Text variant="bodyMedium" className="mb-4 text-neutral-500">
           Capture your thoughts, feelings, and experiences
         </Text>
 
@@ -96,7 +105,7 @@ export default function ReflectScreen() {
                 <Text variant="titleMedium" className="mb-2 text-center">
                   No reflections yet
                 </Text>
-                <Text variant="bodyMedium" className="text-center text-gray-500">
+                <Text variant="bodyMedium" className="text-center text-neutral-500">
                   Tap the + button to create your first reflection
                 </Text>
               </View>
@@ -143,6 +152,7 @@ export default function ReflectScreen() {
           </Text>
           <ReflectionForm
             onSubmit={handleCreate}
+            familyMembers={familyMembers}
             isLoading={createMutation.isPending}
             submitLabel="Create"
           />
@@ -173,7 +183,9 @@ export default function ReflectScreen() {
                 content: editingReflection.content.text,
                 moodScore: editingReflection.moodScore ?? undefined,
                 isShareableWithFamily: editingReflection.isShareable,
+                sharedWith: editingReflection.sharedWith,
               }}
+              familyMembers={familyMembers}
               isLoading={updateMutation.isPending}
               submitLabel="Update"
             />

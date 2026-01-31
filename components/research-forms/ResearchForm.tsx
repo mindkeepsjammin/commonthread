@@ -4,15 +4,13 @@ import { useState, useCallback } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { ResearchFormData, Question } from '@/lib/research-forms/types';
-import {
-  OpeningFrame,
-  FormSection,
-  SingleSelect,
-  MultiSelect,
-  ShortAnswer,
-  Reflection,
-  SubmitButton,
-} from './index';
+import { OpeningFrame } from './OpeningFrame';
+import { FormSection } from './FormSection';
+import { SingleSelect } from './SingleSelect';
+import { MultiSelect } from './MultiSelect';
+import { ShortAnswer } from './ShortAnswer';
+import { Reflection } from './Reflection';
+import { SubmitButton } from './SubmitButton';
 
 interface ResearchFormProps {
   formData: ResearchFormData;
@@ -180,7 +178,7 @@ export const ResearchForm = ({ formData }: ResearchFormProps) => {
           disabled={!consentChecked}
         />
 
-        <Text className="text-center text-sm text-gray-500 mt-6">
+        <Text className="text-center text-sm text-neutral-500 mt-6">
           Your responses help us understand families better.
           {'\n'}Thank you for sharing.
         </Text>

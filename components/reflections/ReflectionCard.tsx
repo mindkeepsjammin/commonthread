@@ -39,7 +39,7 @@ export function ReflectionCard({ reflection, onPress, onDelete }: ReflectionCard
               {TYPE_LABELS[reflection.type]}
             </Chip>
             {reflection.moodScore != null && (
-              <Text variant="bodySmall" className="text-gray-400">
+              <Text variant="bodySmall" className="text-neutral-400">
                 Mood: {reflection.moodScore}/10
               </Text>
             )}
@@ -71,11 +71,11 @@ export function ReflectionCard({ reflection, onPress, onDelete }: ReflectionCard
         </Text>
 
         <View className="flex-row items-center justify-between">
-          <Text variant="bodySmall" className="text-gray-400">
+          <Text variant="bodySmall" className="text-neutral-400">
             {dateStr}
           </Text>
           {reflection.isShareable && (
-            <Text variant="bodySmall" className="text-gray-400">
+            <Text variant="bodySmall" className="text-neutral-400">
               Shared
             </Text>
           )}

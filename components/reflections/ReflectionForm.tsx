@@ -14,6 +14,11 @@ const TYPES: { value: Reflection['type']; label: string }[] = [
 
 const MOOD_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+interface FamilyMember {
+  userId: string;
+  displayName: string;
+}
+
 interface ReflectionFormProps {
   onSubmit: (data: ReflectionCreateInput) => void;
   initialValues?: {
@@ -21,7 +26,9 @@ interface ReflectionFormProps {
     content: string;
     moodScore?: number;
     isShareableWithFamily?: boolean;
+    sharedWith?: string[];
   };
+  familyMembers?: FamilyMember[];
   isLoading: boolean;
   submitLabel?: string;
 }
@@ -29,6 +36,7 @@ interface ReflectionFormProps {
 export function ReflectionForm({
   onSubmit,
   initialValues,
+  familyMembers = [],
   isLoading,
   submitLabel = 'Save',
 }: ReflectionFormProps) {
@@ -39,12 +47,14 @@ export function ReflectionForm({
       content: initialValues?.content ?? '',
       moodScore: initialValues?.moodScore,
       isShareableWithFamily: initialValues?.isShareableWithFamily ?? false,
-      sharedWith: [],
+      sharedWith: initialValues?.sharedWith ?? [],
     },
   });
 
   const selectedType = watch('type');
   const selectedMood = watch('moodScore');
+  const isShareable = watch('isShareableWithFamily');
+  const sharedWith = watch('sharedWith') ?? [];
 
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
@@ -110,12 +120,54 @@ export function ReflectionForm({
         control={control}
         name="isShareableWithFamily"
         render={({ field: { value, onChange } }) => (
-          <View className="flex-row items-center justify-between mb-6">
-            <Text variant="bodyMedium">Share with family</Text>
-            <Switch value={value} onValueChange={onChange} />
+          <View className="mb-4">
+            <View className="flex-row items-center justify-between">
+              <Text variant="bodyMedium">Share with family</Text>
+              <Switch
+                value={value}
+                onValueChange={checked => {
+                  onChange(checked);
+                  if (!checked) setValue('sharedWith', []);
+                }}
+              />
+            </View>
           </View>
         )}
       />
+
+      {isShareable && familyMembers.length > 0 && (
+        <View className="mb-6">
+          <Text variant="titleSmall" className="mb-2">
+            Share with
+          </Text>
+          <View className="flex-row flex-wrap gap-2">
+            {familyMembers.map(member => {
+              const isSelected = sharedWith.includes(member.userId);
+              return (
+                <Chip
+                  key={member.userId}
+                  selected={isSelected}
+                  onPress={() => {
+                    const next = isSelected
+                      ? sharedWith.filter(id => id !== member.userId)
+                      : [...sharedWith, member.userId];
+                    setValue('sharedWith', next);
+                  }}
+                  mode="outlined"
+                >
+                  {member.displayName}
+                </Chip>
+              );
+            })}
+          </View>
+        </View>
+      )}
+
+      {isShareable && familyMembers.length === 0 && (
+        <Text variant="bodySmall" className="mb-6 text-neutral-400">
+          Join a family to share reflections with others.
+        </Text>
+      )}
 
       <Button
         mode="contained"

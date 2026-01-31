@@ -1,10 +1,60 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
+import { calculateHealthScore } from '@/lib/health-score';
 import type { Reflection, ReflectionContent } from '@/types';
 import type { ReflectionCreateInput, ReflectionUpdateInput } from '@/lib/validations';
 
 const REFLECTIONS_QUERY_KEY = ['reflections'];
+const RELATIONSHIPS_QUERY_KEY = ['relationships'];
+
+async function updateHealthScoresForSharing(
+  currentUserId: string,
+  reflectionId: string,
+  sharedWith: string[],
+) {
+  if (sharedWith.length === 0) return;
+
+  for (const otherUserId of sharedWith) {
+    // Find the relationship between these two users
+    const relResult = await getSql()`
+      SELECT r.id AS relationship_id, rh.id AS heart_id,
+             rh.shared_reflections, rh.common_threads, rh.last_check_in
+      FROM relationships r
+      LEFT JOIN relational_hearts rh ON rh.relationship_id = r.id
+      WHERE (r.user_a = ${currentUserId} AND r.user_b = ${otherUserId})
+         OR (r.user_a = ${otherUserId} AND r.user_b = ${currentUserId})
+      LIMIT 1
+    `;
+
+    if (!relResult || relResult.length === 0) continue;
+
+    const row = relResult[0] as any;
+    if (!row.heart_id) continue;
+
+    const existingRefs: string[] = row.shared_reflections ?? [];
+    const updatedRefs = existingRefs.includes(reflectionId)
+      ? existingRefs
+      : [...existingRefs, reflectionId];
+
+    const commonThreads = row.common_threads ?? [];
+    const now = new Date().toISOString();
+
+    const newScore = calculateHealthScore({
+      sharedReflectionCount: updatedRefs.length,
+      lastCheckIn: now,
+      commonThreadCount: Array.isArray(commonThreads) ? commonThreads.length : 0,
+    });
+
+    await getSql()`
+      UPDATE relational_hearts SET
+        shared_reflections = ${updatedRefs},
+        health_score = ${newScore},
+        last_check_in = ${now}
+      WHERE id = ${row.heart_id}
+    `;
+  }
+}
 
 interface ReflectionRow {
   id: string;
@@ -89,10 +139,17 @@ export function useCreateReflection() {
         throw new Error('Failed to create reflection');
       }
 
-      return mapRowToReflection(result[0] as ReflectionRow);
+      const reflection = mapRowToReflection(result[0] as ReflectionRow);
+
+      if (input.sharedWith && input.sharedWith.length > 0) {
+        await updateHealthScoresForSharing(user.id, reflection.id, input.sharedWith);
+      }
+
+      return reflection;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: REFLECTIONS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });
     },
   });
 }
@@ -123,10 +180,17 @@ export function useUpdateReflection() {
         throw new Error('Failed to update reflection');
       }
 
-      return mapRowToReflection(result[0] as ReflectionRow);
+      const reflection = mapRowToReflection(result[0] as ReflectionRow);
+
+      if (updates.sharedWith && updates.sharedWith.length > 0) {
+        await updateHealthScoresForSharing(user.id, reflection.id, updates.sharedWith);
+      }
+
+      return reflection;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: REFLECTIONS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });
     },
   });
 }

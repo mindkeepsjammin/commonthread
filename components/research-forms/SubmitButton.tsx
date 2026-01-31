@@ -20,13 +20,13 @@ export const SubmitButton = ({
       onPress={onPress}
       disabled={isDisabled}
       className={`py-4 px-6 rounded-lg items-center justify-center flex-row ${
-        isDisabled ? 'bg-gray-300' : 'bg-primary-600 active:bg-primary-700'
+        isDisabled ? 'bg-neutral-300' : 'bg-primary-600 active:bg-primary-700'
       }`}
     >
       {loading && <ActivityIndicator color="white" className="mr-2" />}
       <Text
         className={`text-lg font-semibold ${
-          isDisabled ? 'text-gray-500' : 'text-white'
+          isDisabled ? 'text-neutral-500' : 'text-white'
         }`}
       >
         {loading ? 'Submitting...' : label}

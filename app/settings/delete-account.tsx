@@ -45,7 +45,7 @@ export default function DeleteAccountScreen() {
       <Text variant="headlineMedium" className="mb-2 text-center">
         Delete Account
       </Text>
-      <Text variant="bodyMedium" className="mb-6 text-center text-gray-500">
+      <Text variant="bodyMedium" className="mb-6 text-center text-neutral-500">
         This action is permanent and cannot be undone. All your data, reflections, and family
         connections will be permanently removed.
       </Text>

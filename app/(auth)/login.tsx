@@ -49,23 +49,23 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       className="flex-1"
     >
-      <View className="flex-1 justify-center p-6">
+      <View className="flex-1 justify-center bg-neutral-50 p-6">
         <Text variant="headlineLarge" className="mb-2 text-center">
           Welcome Back
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-gray-500">
+        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-600">
           Sign in to Common Thread
         </Text>
 
         {isSessionExpired && (
-          <View className="mb-4 rounded-lg bg-yellow-100 p-3">
-            <Text className="text-yellow-800">Your session has expired. Please sign in again.</Text>
+          <View className="mb-4 rounded-lg bg-accent-100 p-3">
+            <Text className="text-accent-900">Your session has expired. Please sign in again.</Text>
           </View>
         )}
 
         {error && (
-          <View className="mb-4 rounded-lg bg-red-100 p-3">
-            <Text className="text-red-700">{error}</Text>
+          <View className="mb-4 rounded-lg bg-primary-100 p-3">
+            <Text className="text-primary-900">{error}</Text>
           </View>
         )}
 
@@ -126,7 +126,7 @@ export default function LoginScreen() {
 
         <View className="my-4 flex-row items-center">
           <Divider className="flex-1" />
-          <Text variant="bodySmall" className="mx-4 text-gray-400">OR</Text>
+          <Text variant="bodySmall" className="mx-4 text-neutral-500">OR</Text>
           <Divider className="flex-1" />
         </View>
 

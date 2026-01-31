@@ -52,7 +52,7 @@ export default function ChangeEmailScreen() {
         <Text variant="headlineMedium" className="mb-2">
           Change Email
         </Text>
-        <Text variant="bodyMedium" className="mb-6 text-gray-500">
+        <Text variant="bodyMedium" className="mb-6 text-neutral-500">
           Current email: {user?.email}
         </Text>
 

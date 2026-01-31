@@ -2,7 +2,7 @@ import '../global.css';
 import { useEffect } from 'react';
 import { Stack, router, Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { PaperProvider, MD3LightTheme, MD3DarkTheme } from 'react-native-paper';
+import { PaperProvider } from 'react-native-paper';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useColorScheme } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
@@ -10,6 +10,7 @@ import { queryClient } from '@/lib/utils/query-client';
 import { getSupabase } from '@/lib/neon/client';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import { GlobalSnackbar } from '@/components/ui';
+import { lightTheme, darkTheme } from '@/lib/theme';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -53,7 +54,7 @@ export default function RootLayout() {
     return () => subscription.unsubscribe();
   }, [setSession, setUser, setLoading, setSessionExpired, isAuthenticated]);
 
-  const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
+  const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
   return (
     <QueryClientProvider client={queryClient}>

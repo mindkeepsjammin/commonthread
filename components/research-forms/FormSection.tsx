@@ -8,12 +8,12 @@ interface FormSectionProps {
 
 export const FormSection = ({ section, children }: FormSectionProps) => {
   return (
-    <View className="mb-8 pb-8 border-b border-gray-200">
-      <Text className="text-xl font-semibold text-gray-900 mb-2">
+    <View className="mb-8 pb-8 border-b border-neutral-200">
+      <Text className="text-xl font-semibold text-neutral-900 mb-2">
         {section.title}
       </Text>
       {section.description && (
-        <Text className="text-sm text-gray-600 italic mb-6">
+        <Text className="text-sm text-neutral-600 italic mb-6">
           {section.description}
         </Text>
       )}

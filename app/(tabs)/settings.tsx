@@ -30,7 +30,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView className="flex-1 bg-neutral-50">
       <View className="p-4">
         <View className="mb-6 items-center rounded-lg bg-white p-6">
           <Avatar.Text
@@ -41,7 +41,7 @@ export default function SettingsScreen() {
             {displayProfile?.displayName ?? 'User'}
           </Text>
           {displayProfile?.role && (
-            <Text variant="bodyMedium" className="text-gray-500 capitalize">
+            <Text variant="bodyMedium" className="text-neutral-500 capitalize">
               {displayProfile.role}
             </Text>
           )}

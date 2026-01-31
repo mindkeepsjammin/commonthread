@@ -9,15 +9,15 @@ export default function ThankYouPage() {
           <Text className="text-4xl">✓</Text>
         </View>
 
-        <Text className="text-2xl font-bold text-gray-900 text-center mb-3">
+        <Text className="text-2xl font-bold text-neutral-900 text-center mb-3">
           Thank You
         </Text>
 
-        <Text className="text-lg text-gray-600 text-center mb-6">
+        <Text className="text-lg text-neutral-600 text-center mb-6">
           Your reflections have been received.
         </Text>
 
-        <Text className="text-base text-gray-500 text-center mb-8">
+        <Text className="text-base text-neutral-500 text-center mb-8">
           We're grateful for the time you took to share your perspective. Your
           insights help us understand how families experience technology and
           relationships in real life.

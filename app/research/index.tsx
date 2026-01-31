@@ -33,13 +33,13 @@ export default function ResearchIndexPage() {
     <ScrollView className="flex-1 bg-white">
       <View className="max-w-2xl mx-auto p-6">
         <View className="mb-8">
-          <Text className="text-3xl font-bold text-gray-900 mb-3">
+          <Text className="text-3xl font-bold text-neutral-900 mb-3">
             Family Research Forms
           </Text>
-          <Text className="text-lg text-gray-600 mb-4">
+          <Text className="text-lg text-neutral-600 mb-4">
             Families, Technology & Learning Together
           </Text>
-          <Text className="text-base text-gray-500">
+          <Text className="text-base text-neutral-500">
             These forms are part of a quiet research process to better understand
             how families experience technology and relationships in real life.
             We're learning with families, not studying them from the outside.
@@ -49,11 +49,11 @@ export default function ResearchIndexPage() {
         <View className="space-y-4">
           {forms.map((form) => (
             <Link key={form.id} href={form.href as `/research/${string}`} asChild>
-              <Pressable className="bg-gray-50 border border-gray-200 rounded-lg p-5 active:bg-gray-100">
-                <Text className="text-lg font-semibold text-gray-900 mb-1">
+              <Pressable className="bg-neutral-50 border border-neutral-200 rounded-lg p-5 active:bg-neutral-100">
+                <Text className="text-lg font-semibold text-neutral-900 mb-1">
                   {form.title}
                 </Text>
-                <Text className="text-base text-gray-600">
+                <Text className="text-base text-neutral-600">
                   {form.description}
                 </Text>
               </Pressable>
@@ -61,8 +61,8 @@ export default function ResearchIndexPage() {
           ))}
         </View>
 
-        <View className="mt-8 pt-6 border-t border-gray-200">
-          <Text className="text-sm text-gray-500 text-center">
+        <View className="mt-8 pt-6 border-t border-neutral-200">
+          <Text className="text-sm text-neutral-500 text-center">
             All responses are confidential and used only for research purposes.
             {'\n'}You can skip any question or stop at any time.
           </Text>

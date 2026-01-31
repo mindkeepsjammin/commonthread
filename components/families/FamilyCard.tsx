@@ -35,12 +35,12 @@ export function FamilyCard({ family, onPress }: FamilyCardProps) {
           </Chip>
         </View>
 
-        <Text variant="bodySmall" className="text-gray-400 mb-2">
+        <Text variant="bodySmall" className="text-neutral-400 mb-2">
           {family.memberCount} {family.memberCount === 1 ? 'member' : 'members'}
         </Text>
 
         {showCode ? (
-          <View className="flex-row items-center justify-between bg-gray-100 rounded-lg p-3">
+          <View className="flex-row items-center justify-between bg-neutral-100 rounded-lg p-3">
             <Text variant="titleSmall" className="font-mono tracking-widest">
               {family.inviteCode.toUpperCase()}
             </Text>

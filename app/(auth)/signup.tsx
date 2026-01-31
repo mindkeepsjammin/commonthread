@@ -60,7 +60,7 @@ export default function SignupScreen() {
           <Text variant="headlineLarge" className="mb-2 text-center">
             Create Account
           </Text>
-          <Text variant="bodyLarge" className="mb-8 text-center text-gray-500">
+          <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
             Join Common Thread
           </Text>
 
@@ -167,7 +167,7 @@ export default function SignupScreen() {
 
           <View className="my-4 flex-row items-center">
             <Divider className="flex-1" />
-            <Text variant="bodySmall" className="mx-4 text-gray-400">OR</Text>
+            <Text variant="bodySmall" className="mx-4 text-neutral-400">OR</Text>
             <Divider className="flex-1" />
           </View>
 

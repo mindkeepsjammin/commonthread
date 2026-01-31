@@ -47,7 +47,7 @@ export default function ResetPasswordScreen() {
         <Text variant="headlineLarge" className="mb-2 text-center">
           Set New Password
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-gray-500">
+        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
           Enter your new password below
         </Text>
 

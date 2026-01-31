@@ -16,12 +16,12 @@ export const Reflection = ({
 }: ReflectionProps) => {
   return (
     <View className="mb-6">
-      <Text className="text-base font-medium text-gray-900 mb-1">
+      <Text className="text-base font-medium text-neutral-900 mb-1">
         {question.question}
         {question.required && <Text className="text-red-500"> *</Text>}
       </Text>
       {question.hint && (
-        <Text className="text-sm text-gray-500 mb-3">{question.hint}</Text>
+        <Text className="text-sm text-neutral-500 mb-3">{question.hint}</Text>
       )}
       <TextInput
         value={value}
@@ -31,7 +31,7 @@ export const Reflection = ({
         multiline
         numberOfLines={4}
         textAlignVertical="top"
-        className="border border-gray-200 rounded-lg p-3 text-base text-gray-900 bg-white min-h-[120px]"
+        className="border border-neutral-200 rounded-lg p-3 text-base text-neutral-900 bg-white min-h-[120px]"
       />
       {error && <Text className="text-red-500 text-sm mt-2">{error}</Text>}
     </View>

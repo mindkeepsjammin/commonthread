@@ -78,7 +78,7 @@ export default function FamilyScreen() {
   const hasFamilies = families && families.length > 0;
 
   return (
-    <View className="flex-1 bg-gray-50">
+    <View className="flex-1 bg-neutral-50">
       <View className="p-4 pb-0">
         {/* Profile Card */}
         <Card className="mb-4">
@@ -87,10 +87,10 @@ export default function FamilyScreen() {
               <Avatar name={profile?.displayName} uri={profile?.avatarUrl} size="medium" />
               <View className="ml-4 flex-1">
                 <Text variant="titleLarge">{profile?.displayName || 'User'}</Text>
-                <Text variant="bodyMedium" className="text-gray-500">
+                <Text variant="bodyMedium" className="text-neutral-500">
                   {profile?.role ? roleLabels[profile.role] : 'No role set'}
                 </Text>
-                <Text variant="bodySmall" className="text-gray-400">
+                <Text variant="bodySmall" className="text-neutral-400">
                   {user?.email}
                 </Text>
               </View>
@@ -112,10 +112,10 @@ export default function FamilyScreen() {
           <Card className="mb-4">
             <Card.Content>
               <View className="items-center py-4">
-                <Text variant="bodyLarge" className="mb-2 text-center text-gray-500">
+                <Text variant="bodyLarge" className="mb-2 text-center text-neutral-500">
                   You haven't joined any families yet
                 </Text>
-                <Text variant="bodySmall" className="text-center text-gray-400">
+                <Text variant="bodySmall" className="text-center text-neutral-400">
                   Create a new family or join one with an invite code
                 </Text>
               </View>
@@ -230,7 +230,7 @@ export default function FamilyScreen() {
             <Text variant="bodyMedium" className="mb-4">
               Share this invite code with your family members:
             </Text>
-            <View className="items-center bg-gray-100 rounded-lg p-4">
+            <View className="items-center bg-neutral-100 rounded-lg p-4">
               <Text variant="headlineMedium" className="font-mono tracking-widest mb-2">
                 {newInviteCode}
               </Text>

@@ -36,7 +36,7 @@ export function Avatar({ uri, name, size = 'medium' }: AvatarProps) {
     return (
       <Image
         source={{ uri }}
-        className={`${sizeClass} rounded-full bg-gray-200`}
+        className={`${sizeClass} rounded-full bg-neutral-200`}
         resizeMode="cover"
       />
     );

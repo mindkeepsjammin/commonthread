@@ -7,10 +7,10 @@ interface LoadingScreenProps {
 
 export function LoadingScreen({ message }: LoadingScreenProps) {
   return (
-    <View className="flex-1 items-center justify-center bg-gray-50">
+    <View className="flex-1 items-center justify-center bg-neutral-50">
       <ActivityIndicator size="large" />
       {message && (
-        <Text variant="bodyMedium" className="mt-4 text-gray-500">
+        <Text variant="bodyMedium" className="mt-4 text-neutral-500">
           {message}
         </Text>
       )}

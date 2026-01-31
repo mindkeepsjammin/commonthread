@@ -50,12 +50,12 @@ export default function CompleteProfileScreen() {
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-50">
+    <ScrollView className="flex-1 bg-neutral-50">
       <View className="flex-1 p-6 pt-16">
         <Text variant="headlineLarge" className="mb-2 text-center">
           Complete Your Profile
         </Text>
-        <Text variant="bodyLarge" className="mb-8 text-center text-gray-500">
+        <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
           Tell us a bit about yourself
         </Text>
 
@@ -96,7 +96,7 @@ export default function CompleteProfileScreen() {
           <Text variant="titleMedium" className="mb-3">
             Life Stage
           </Text>
-          <Text variant="bodySmall" className="mb-3 text-gray-500">
+          <Text variant="bodySmall" className="mb-3 text-neutral-500">
             This helps personalize your experience
           </Text>
           <Controller

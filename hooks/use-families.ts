@@ -5,6 +5,34 @@ import type { Family } from '@/types';
 
 const FAMILIES_QUERY_KEY = ['families'];
 const FAMILY_MEMBERS_QUERY_KEY = ['family-members'];
+const RELATIONSHIPS_QUERY_KEY = ['relationships'];
+
+async function createRelationshipsForNewMember(
+  familyId: string,
+  newUserId: string,
+) {
+  const members = await getSql()`
+    SELECT user_id FROM family_memberships
+    WHERE family_id = ${familyId} AND user_id != ${newUserId}
+  `;
+
+  for (const member of members ?? []) {
+    const otherId = (member as any).user_id;
+    const relResult = await getSql()`
+      INSERT INTO relationships (family_id, user_a, user_b)
+      VALUES (${familyId}, ${newUserId}, ${otherId})
+      ON CONFLICT (user_a, user_b) DO NOTHING
+      RETURNING id
+    `;
+
+    if (relResult && relResult.length > 0) {
+      await getSql()`
+        INSERT INTO relational_hearts (relationship_id)
+        VALUES (${(relResult[0] as any).id})
+      `;
+    }
+  }
+}
 
 export interface FamilyWithMeta extends Family {
   memberCount: number;
@@ -126,6 +154,8 @@ export function useCreateFamily() {
         VALUES (${family.id}, ${user.id}, 'admin')
       `;
 
+      await createRelationshipsForNewMember(family.id, user.id);
+
       return {
         id: family.id,
         name: family.name,
@@ -138,6 +168,7 @@ export function useCreateFamily() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FAMILIES_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });
     },
   });
 }
@@ -177,12 +208,15 @@ export function useJoinFamily() {
         VALUES (${family.id}, ${user.id}, 'member')
       `;
 
+      await createRelationshipsForNewMember(family.id, user.id);
+
       return {
         familyName: family.name as string,
       };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FAMILIES_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: RELATIONSHIPS_QUERY_KEY });
     },
   });
 }

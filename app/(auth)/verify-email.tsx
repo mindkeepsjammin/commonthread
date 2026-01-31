@@ -48,7 +48,7 @@ export default function VerifyEmailScreen() {
       <Text variant="headlineLarge" className="mb-2 text-center">
         Verify Your Email
       </Text>
-      <Text variant="bodyLarge" className="mb-2 text-center text-gray-500">
+      <Text variant="bodyLarge" className="mb-2 text-center text-neutral-500">
         We've sent a verification link to:
       </Text>
       {user?.email && (

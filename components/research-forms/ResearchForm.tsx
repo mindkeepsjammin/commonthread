@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { View, ScrollView, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import type { ResearchFormData, Question } from '@/lib/research-forms/types';
+import { submitResearchForm, type FormType } from '@/lib/neon/client';
 import { OpeningFrame } from './OpeningFrame';
 import { FormSection } from './FormSection';
 import { SingleSelect } from './SingleSelect';
@@ -73,22 +74,13 @@ export const ResearchForm = ({ formData }: ResearchFormProps) => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/research/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formType: formData.id,
-          consentConfirmed: consentChecked,
-          preferredName: values.preferred_name || null,
-          responses: values,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
+      await submitResearchForm(
+        formData.id as FormType,
+        consentChecked,
+        (values.preferred_name as string) || null,
+        values,
+        typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      );
 
       // Navigate to thank you page
       router.push('/research/thank-you');

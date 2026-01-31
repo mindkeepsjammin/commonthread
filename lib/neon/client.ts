@@ -6,7 +6,7 @@ import type { Database } from '@/types/database';
 
 // Neon serverless client for direct database queries (lazily initialized to avoid
 // throwing during Expo static rendering when env vars aren't available)
-let _sql: ReturnType<typeof neon> | null = null;
+let _sql: ReturnType<typeof neon<false, false>> | null = null;
 
 export function getSql() {
   if (!_sql) {
@@ -14,7 +14,7 @@ export function getSql() {
     if (!databaseUrl) {
       throw new Error('Missing EXPO_PUBLIC_NEON_DATABASE_URL environment variable');
     }
-    _sql = neon(databaseUrl);
+    _sql = neon<false, false>(databaseUrl);
   }
   return _sql;
 }

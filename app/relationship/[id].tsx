@@ -1,9 +1,18 @@
 import { View, ScrollView } from 'react-native';
-import { Text, Card, ProgressBar, Button, ActivityIndicator, Chip, useTheme } from 'react-native-paper';
+import {
+  Text,
+  Card,
+  ProgressBar,
+  Button,
+  ActivityIndicator,
+  Chip,
+  useTheme,
+} from 'react-native-paper';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useRelationship, useCheckIn, useDiscoverThreads } from '@/hooks/use-relationships';
 import { useSharedReflections } from '@/hooks/use-shared-reflections';
 import { ReflectionCard } from '@/components/reflections';
+import type { CommonThread } from '@/types';
 import { useSnackbar } from '@/hooks/use-snackbar';
 
 export default function RelationshipDetailScreen() {
@@ -13,6 +22,9 @@ export default function RelationshipDetailScreen() {
   const checkInMutation = useCheckIn();
   const discoverMutation = useDiscoverThreads();
   const { showSnackbar } = useSnackbar();
+  const otherUserId = data?.otherUserId ?? null;
+  const { data: sharedReflections, isLoading: loadingReflections } =
+    useSharedReflections(otherUserId);
 
   const handleCheckIn = async () => {
     if (!id) return;
@@ -29,7 +41,10 @@ export default function RelationshipDetailScreen() {
     try {
       const threads = await discoverMutation.mutateAsync(id);
       if (threads.length > 0) {
-        showSnackbar(`Found ${threads.length} common thread${threads.length > 1 ? 's' : ''}!`, 'success');
+        showSnackbar(
+          `Found ${threads.length} common thread${threads.length > 1 ? 's' : ''}!`,
+          'success'
+        );
       } else {
         showSnackbar('No patterns found yet. Share more reflections!', 'info');
       }
@@ -40,7 +55,10 @@ export default function RelationshipDetailScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center" style={{ backgroundColor: theme.colors.background }}>
+      <View
+        className="flex-1 items-center justify-center"
+        style={{ backgroundColor: theme.colors.background }}
+      >
         <ActivityIndicator size="large" />
       </View>
     );
@@ -48,8 +66,15 @@ export default function RelationshipDetailScreen() {
 
   if (!data) {
     return (
-      <View className="flex-1 items-center justify-center p-4" style={{ backgroundColor: theme.colors.background }}>
-        <Text variant="bodyLarge" className="text-center" style={{ color: theme.colors.onSurfaceVariant }}>
+      <View
+        className="flex-1 items-center justify-center p-4"
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <Text
+          variant="bodyLarge"
+          className="text-center"
+          style={{ color: theme.colors.onSurfaceVariant }}
+        >
           Relationship not found.
         </Text>
         <Button mode="contained-tonal" className="mt-4" onPress={() => router.back()}>
@@ -59,19 +84,22 @@ export default function RelationshipDetailScreen() {
     );
   }
 
-  const { relationship, heart, otherUserName, otherUserId } = data;
+  const { relationship, heart, otherUserName } = data;
   const healthScore = heart?.healthScore ?? 50;
   const commonThreads = heart?.commonThreads ?? [];
-  const { data: sharedReflections, isLoading: loadingReflections } = useSharedReflections(otherUserId);
 
   return (
     <ScrollView className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="p-4">
-        <Text variant="headlineMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+        <Text
+          variant="headlineMedium"
+          className="mb-1"
+          style={{ color: theme.colors.onBackground }}
+        >
           {otherUserName}
         </Text>
         {relationship.relationshipType && (
-          <Chip compact className="self-start mb-4">
+          <Chip compact className="mb-4 self-start">
             {relationship.relationshipType}
           </Chip>
         )}
@@ -79,11 +107,19 @@ export default function RelationshipDetailScreen() {
 
         <Card className="mb-4">
           <Card.Content>
-            <Text variant="titleMedium" className="mb-2" style={{ color: theme.colors.onBackground }}>
+            <Text
+              variant="titleMedium"
+              className="mb-2"
+              style={{ color: theme.colors.onBackground }}
+            >
               Relational Heart
             </Text>
 
-            <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onSurfaceVariant }}>
+            <Text
+              variant="titleSmall"
+              className="mb-2"
+              style={{ color: theme.colors.onSurfaceVariant }}
+            >
               Health Score
             </Text>
             <ProgressBar
@@ -131,12 +167,16 @@ export default function RelationshipDetailScreen() {
 
         <Card className="mb-4">
           <Card.Content>
-            <Text variant="titleMedium" className="mb-2" style={{ color: theme.colors.onBackground }}>
+            <Text
+              variant="titleMedium"
+              className="mb-2"
+              style={{ color: theme.colors.onBackground }}
+            >
               Common Threads
             </Text>
             {commonThreads.length > 0 ? (
               <View className="gap-2">
-                {commonThreads.map(thread => (
+                {commonThreads.map((thread: CommonThread) => (
                   <View key={thread.id} className="flex-row items-center gap-2">
                     <Chip compact>{thread.theme}</Chip>
                     <Text variant="bodySmall" style={{ color: theme.colors.outline }}>

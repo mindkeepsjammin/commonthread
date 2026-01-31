@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSql } from '@/lib/neon/client';
 import { useAuthStore } from './use-auth-store';
 import { calculateHealthScore } from '@/lib/health-score';
-import type { CommonThread } from '@/types';
+import type { CommonThread, Relationship, RelationalHeart } from '@/types';
 
 const RELATIONSHIPS_QUERY_KEY = ['relationships'];
 

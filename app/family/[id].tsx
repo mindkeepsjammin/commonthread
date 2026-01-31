@@ -1,5 +1,5 @@
 import { View, FlatList } from 'react-native';
-import { Text, Card, Chip, ActivityIndicator, Button, useTheme } from 'react-native-paper';
+import { Text, Card, ActivityIndicator, useTheme } from 'react-native-paper';
 import { useLocalSearchParams, router } from 'expo-router';
 import { useFamilies, useFamilyMembers } from '@/hooks/use-families';
 import { useFindRelationship, useCreateRelationship } from '@/hooks/use-find-relationship';
@@ -27,7 +27,10 @@ export default function FamilyDetailScreen() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center" style={{ backgroundColor: theme.colors.background }}>
+      <View
+        className="flex-1 items-center justify-center"
+        style={{ backgroundColor: theme.colors.background }}
+      >
         <ActivityIndicator size="large" />
       </View>
     );
@@ -36,10 +39,18 @@ export default function FamilyDetailScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="p-4 pb-0">
-        <Text variant="headlineMedium" className="mb-1" style={{ color: theme.colors.onBackground }}>
+        <Text
+          variant="headlineMedium"
+          className="mb-1"
+          style={{ color: theme.colors.onBackground }}
+        >
           {family?.name ?? 'Family'}
         </Text>
-        <Text variant="bodyMedium" className="mb-4" style={{ color: theme.colors.onSurfaceVariant }}>
+        <Text
+          variant="bodyMedium"
+          className="mb-4"
+          style={{ color: theme.colors.onSurfaceVariant }}
+        >
           {members?.length ?? 0} {(members?.length ?? 0) === 1 ? 'member' : 'members'}
         </Text>
       </View>
@@ -49,10 +60,18 @@ export default function FamilyDetailScreen() {
           <Card>
             <Card.Content>
               <View className="items-center py-8">
-                <Text variant="titleMedium" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
+                <Text
+                  variant="titleMedium"
+                  className="mb-2 text-center"
+                  style={{ color: theme.colors.onBackground }}
+                >
                   No other members yet
                 </Text>
-                <Text variant="bodyMedium" className="text-center" style={{ color: theme.colors.onSurfaceVariant }}>
+                <Text
+                  variant="bodyMedium"
+                  className="text-center"
+                  style={{ color: theme.colors.onSurfaceVariant }}
+                >
                   Invite family members to start connecting
                 </Text>
               </View>
@@ -64,9 +83,7 @@ export default function FamilyDetailScreen() {
           data={otherMembers}
           keyExtractor={item => item.id}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
-          renderItem={({ item }) => (
-            <MemberCard member={item} familyId={familyId!} />
-          )}
+          renderItem={({ item }) => <MemberCard member={item} familyId={familyId!} />}
         />
       )}
     </View>
@@ -76,7 +93,9 @@ export default function FamilyDetailScreen() {
 function MemberCard({ member, familyId }: { member: FamilyMemberInfo; familyId: string }) {
   const theme = useTheme();
   const [navigating, setNavigating] = useState(false);
-  const { data: relationshipId, isLoading: findingRelationship } = useFindRelationship(member.userId);
+  const { data: relationshipId, isLoading: findingRelationship } = useFindRelationship(
+    member.userId
+  );
   const createRelationship = useCreateRelationship();
 
   const handlePress = async () => {

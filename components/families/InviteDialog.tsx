@@ -14,7 +14,7 @@ interface InviteDialogProps {
 
 export function InviteDialog({
   visible,
-  familyId,
+  familyId: _familyId,
   familyName,
   onDismiss,
   onInvite,
@@ -29,7 +29,7 @@ export function InviteDialog({
 
     const result = familyInviteSchema.safeParse({ email: email.trim() });
     if (!result.success) {
-      setError(result.error.errors[0].message);
+      setError(result.error.issues[0].message);
       return;
     }
 
@@ -52,13 +52,20 @@ export function InviteDialog({
     <Dialog visible={visible} onDismiss={handleDismiss}>
       <Dialog.Title>Invite to {familyName}</Dialog.Title>
       <Dialog.Content>
-        <Text variant="bodyMedium" className="mb-3" style={{ color: theme.colors.onSurfaceVariant }}>
-          Enter the email address of the person you'd like to invite.
-          They'll receive an email with instructions to join.
+        <Text
+          variant="bodyMedium"
+          className="mb-3"
+          style={{ color: theme.colors.onSurfaceVariant }}
+        >
+          Enter the email address of the person you'd like to invite. They'll receive an email with
+          instructions to join.
         </Text>
 
         {error && (
-          <View className="mb-2 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+          <View
+            className="mb-2 rounded-lg p-3"
+            style={{ backgroundColor: theme.colors.errorContainer }}
+          >
             <Text style={{ color: theme.colors.error }}>{error}</Text>
           </View>
         )}
@@ -73,19 +80,13 @@ export function InviteDialog({
           autoComplete="email"
           placeholder="name@example.com"
         />
-        <HelperText type="info">
-          An invite email will be sent to this address
-        </HelperText>
+        <HelperText type="info">An invite email will be sent to this address</HelperText>
       </Dialog.Content>
       <Dialog.Actions>
         <Button onPress={handleDismiss} disabled={isPending}>
           Cancel
         </Button>
-        <Button
-          onPress={handleInvite}
-          disabled={!email.trim() || isPending}
-          loading={isPending}
-        >
+        <Button onPress={handleInvite} disabled={!email.trim() || isPending} loading={isPending}>
           Send Invite
         </Button>
       </Dialog.Actions>

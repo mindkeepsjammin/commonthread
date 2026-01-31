@@ -8,8 +8,6 @@ import {
   Dialog,
   Portal,
   HelperText,
-  Divider,
-  List,
   useTheme,
 } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
@@ -47,7 +45,9 @@ export default function FamilyScreen() {
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [showInviteCodeDialog, setShowInviteCodeDialog] = useState(false);
   const [showInviteDialog, setShowInviteDialog] = useState(false);
-  const [inviteTargetFamily, setInviteTargetFamily] = useState<{ id: string; name: string } | null>(null);
+  const [inviteTargetFamily, setInviteTargetFamily] = useState<{ id: string; name: string } | null>(
+    null
+  );
   const [newInviteCode, setNewInviteCode] = useState('');
   const [familyName, setFamilyName] = useState('');
   const [inviteCode, setInviteCode] = useState('');
@@ -171,10 +171,18 @@ export default function FamilyScreen() {
           <Card className="mb-4">
             <Card.Content>
               <View className="items-center py-4">
-                <Text variant="bodyLarge" className="mb-2 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
+                <Text
+                  variant="bodyLarge"
+                  className="mb-2 text-center"
+                  style={{ color: theme.colors.onSurfaceVariant }}
+                >
                   You haven't joined any families yet
                 </Text>
-                <Text variant="bodySmall" className="text-center" style={{ color: theme.colors.outline }}>
+                <Text
+                  variant="bodySmall"
+                  className="text-center"
+                  style={{ color: theme.colors.outline }}
+                >
                   Create a new family or join one with an invite code
                 </Text>
               </View>
@@ -202,7 +210,7 @@ export default function FamilyScreen() {
             />
           )}
           ListFooterComponent={
-            <View className="flex-row gap-2 mt-2">
+            <View className="mt-2 flex-row gap-2">
               <Button mode="contained" compact onPress={() => setShowCreateDialog(true)}>
                 Create Family
               </Button>
@@ -235,7 +243,10 @@ export default function FamilyScreen() {
           <Dialog.Title>Create Family</Dialog.Title>
           <Dialog.Content>
             {createError && (
-              <View className="mb-2 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+              <View
+                className="mb-2 rounded-lg p-3"
+                style={{ backgroundColor: theme.colors.errorContainer }}
+              >
                 <Text style={{ color: theme.colors.error }}>{createError}</Text>
               </View>
             )}
@@ -269,7 +280,10 @@ export default function FamilyScreen() {
           <Dialog.Title>Join Family</Dialog.Title>
           <Dialog.Content>
             {joinError && (
-              <View className="mb-2 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+              <View
+                className="mb-2 rounded-lg p-3"
+                style={{ backgroundColor: theme.colors.errorContainer }}
+              >
                 <Text style={{ color: theme.colors.error }}>{joinError}</Text>
               </View>
             )}
@@ -282,7 +296,9 @@ export default function FamilyScreen() {
               maxLength={8}
               placeholder="ABCD1234"
             />
-            <HelperText type="info">Ask a family member for their 8-character invite code</HelperText>
+            <HelperText type="info">
+              Ask a family member for their 8-character invite code
+            </HelperText>
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={() => setShowJoinDialog(false)} disabled={joinMutation.isPending}>
@@ -299,17 +315,17 @@ export default function FamilyScreen() {
         </Dialog>
 
         {/* Invite Code Success Dialog */}
-        <Dialog
-          visible={showInviteCodeDialog}
-          onDismiss={() => setShowInviteCodeDialog(false)}
-        >
+        <Dialog visible={showInviteCodeDialog} onDismiss={() => setShowInviteCodeDialog(false)}>
           <Dialog.Title>Family Created!</Dialog.Title>
           <Dialog.Content>
             <Text variant="bodyMedium" className="mb-4">
               Share this invite code with your family members:
             </Text>
-            <View className="items-center rounded-lg p-4" style={{ backgroundColor: theme.colors.surfaceVariant }}>
-              <Text variant="headlineMedium" className="font-mono tracking-widest mb-2">
+            <View
+              className="items-center rounded-lg p-4"
+              style={{ backgroundColor: theme.colors.surfaceVariant }}
+            >
+              <Text variant="headlineMedium" className="mb-2 font-mono tracking-widest">
                 {newInviteCode}
               </Text>
               <Button

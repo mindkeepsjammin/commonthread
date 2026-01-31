@@ -2,7 +2,8 @@ import { View, ScrollView } from 'react-native';
 import { Text, TextInput, Button, Chip, Switch, useTheme } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { reflectionCreateSchema, type ReflectionCreateInput } from '@/lib/validations';
+import { reflectionCreateSchema } from '@/lib/validations';
+import type { z } from 'zod';
 import type { Reflection } from '@/types';
 
 const TYPES: { value: Reflection['type']; label: string }[] = [
@@ -20,7 +21,7 @@ interface FamilyMember {
 }
 
 interface ReflectionFormProps {
-  onSubmit: (data: ReflectionCreateInput) => void;
+  onSubmit: (data: z.input<typeof reflectionCreateSchema>) => void;
   initialValues?: {
     type: Reflection['type'];
     content: string;
@@ -41,7 +42,9 @@ export function ReflectionForm({
   submitLabel = 'Save',
 }: ReflectionFormProps) {
   const theme = useTheme();
-  const { control, handleSubmit, watch, setValue } = useForm<ReflectionCreateInput>({
+  const { control, handleSubmit, watch, setValue } = useForm<
+    z.input<typeof reflectionCreateSchema>
+  >({
     resolver: zodResolver(reflectionCreateSchema),
     defaultValues: {
       type: initialValues?.type ?? 'journal',
@@ -62,7 +65,7 @@ export function ReflectionForm({
       <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
         Type
       </Text>
-      <View className="flex-row flex-wrap gap-2 mb-4">
+      <View className="mb-4 flex-row flex-wrap gap-2">
         {TYPES.map(t => (
           <Chip
             key={t.value}
@@ -103,7 +106,7 @@ export function ReflectionForm({
       <Text variant="titleSmall" className="mb-2" style={{ color: theme.colors.onBackground }}>
         Mood (optional)
       </Text>
-      <View className="flex-row flex-wrap gap-1 mb-4">
+      <View className="mb-4 flex-row flex-wrap gap-1">
         {MOOD_VALUES.map(v => (
           <Chip
             key={v}
@@ -123,7 +126,9 @@ export function ReflectionForm({
         render={({ field: { value, onChange } }) => (
           <View className="mb-4">
             <View className="flex-row items-center justify-between">
-              <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>Share with family</Text>
+              <Text variant="bodyMedium" style={{ color: theme.colors.onSurface }}>
+                Share with family
+              </Text>
               <Switch
                 value={value}
                 onValueChange={checked => {

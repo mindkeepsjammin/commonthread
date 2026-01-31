@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
-import { router } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { changePasswordSchema, type ChangePasswordInput } from '@/lib/validations';
@@ -61,18 +60,28 @@ export default function ChangePasswordScreen() {
       className="flex-1"
     >
       <View className="flex-1 p-6">
-        <Text variant="headlineMedium" className="mb-6" style={{ color: theme.colors.onBackground }}>
+        <Text
+          variant="headlineMedium"
+          className="mb-6"
+          style={{ color: theme.colors.onBackground }}
+        >
           Change Password
         </Text>
 
         {error && (
-          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+          <View
+            className="mb-4 rounded-lg p-3"
+            style={{ backgroundColor: theme.colors.errorContainer }}
+          >
             <Text style={{ color: theme.colors.error }}>{error}</Text>
           </View>
         )}
 
         {success && (
-          <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.secondaryContainer }}>
+          <View
+            className="mb-4 rounded-lg p-3"
+            style={{ backgroundColor: theme.colors.secondaryContainer }}
+          >
             <Text style={{ color: theme.colors.secondary }}>Password updated successfully.</Text>
           </View>
         )}

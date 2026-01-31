@@ -1,14 +1,22 @@
 import { useState, useMemo } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import { Text, FAB, Card, Chip, Portal, Modal, Dialog, Button, useTheme } from 'react-native-paper';
-import { useReflections, useCreateReflection, useUpdateReflection, useDeleteReflection } from '@/hooks/use-reflections';
+import {
+  useReflections,
+  useCreateReflection,
+  useUpdateReflection,
+  useDeleteReflection,
+} from '@/hooks/use-reflections';
 import { useReflectionsSharedWithMe } from '@/hooks/use-reflections-shared-with-me';
 import { useFamilies, useFamilyMembers } from '@/hooks/use-families';
 import { useAuthStore } from '@/hooks/use-auth-store';
 import { ReflectionCard, ReflectionForm } from '@/components/reflections';
 import { useSnackbar } from '@/hooks/use-snackbar';
 import type { Reflection } from '@/types';
-import type { ReflectionCreateInput } from '@/lib/validations';
+import { reflectionCreateSchema } from '@/lib/validations';
+import type { z } from 'zod';
+
+type ReflectionInput = z.input<typeof reflectionCreateSchema>;
 
 type FilterType = Reflection['type'] | 'shared_with_me' | undefined;
 
@@ -29,7 +37,9 @@ export default function ReflectScreen() {
 
   const { user } = useAuthStore();
   const isSharedFilter = filter === 'shared_with_me';
-  const reflectionTypeFilter = isSharedFilter ? undefined : filter as Reflection['type'] | undefined;
+  const reflectionTypeFilter = isSharedFilter
+    ? undefined
+    : (filter as Reflection['type'] | undefined);
   const { data: ownReflections, isLoading: loadingOwn } = useReflections(reflectionTypeFilter);
   const { data: sharedWithMe, isLoading: loadingShared } = useReflectionsSharedWithMe();
   const reflections = isSharedFilter ? sharedWithMe : ownReflections;
@@ -50,9 +60,13 @@ export default function ReflectScreen() {
   const deleteMutation = useDeleteReflection();
   const { showSnackbar } = useSnackbar();
 
-  const handleCreate = async (data: ReflectionCreateInput) => {
+  const handleCreate = async (data: ReflectionInput) => {
     try {
-      await createMutation.mutateAsync(data);
+      await createMutation.mutateAsync({
+        ...data,
+        isShareableWithFamily: data.isShareableWithFamily ?? false,
+        sharedWith: data.sharedWith ?? [],
+      });
       setShowCreateModal(false);
       showSnackbar('Reflection created', 'success');
     } catch {
@@ -60,10 +74,15 @@ export default function ReflectScreen() {
     }
   };
 
-  const handleUpdate = async (data: ReflectionCreateInput) => {
+  const handleUpdate = async (data: ReflectionInput) => {
     if (!editingReflection) return;
     try {
-      await updateMutation.mutateAsync({ id: editingReflection.id, ...data });
+      await updateMutation.mutateAsync({
+        id: editingReflection.id,
+        ...data,
+        isShareableWithFamily: data.isShareableWithFamily ?? false,
+        sharedWith: data.sharedWith ?? [],
+      });
       setEditingReflection(null);
       showSnackbar('Reflection updated', 'success');
     } catch {
@@ -85,10 +104,18 @@ export default function ReflectScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: theme.colors.background }}>
       <View className="p-4 pb-0">
-        <Text variant="headlineMedium" className="mb-2" style={{ color: theme.colors.onBackground }}>
+        <Text
+          variant="headlineMedium"
+          className="mb-2"
+          style={{ color: theme.colors.onBackground }}
+        >
           Your Reflections
         </Text>
-        <Text variant="bodyMedium" className="mb-4" style={{ color: theme.colors.onSurfaceVariant }}>
+        <Text
+          variant="bodyMedium"
+          className="mb-4"
+          style={{ color: theme.colors.onSurfaceVariant }}
+        >
           Capture your thoughts, feelings, and experiences
         </Text>
 
@@ -115,10 +142,18 @@ export default function ReflectScreen() {
           <Card className="mb-4">
             <Card.Content>
               <View className="items-center py-8">
-                <Text variant="titleMedium" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
+                <Text
+                  variant="titleMedium"
+                  className="mb-2 text-center"
+                  style={{ color: theme.colors.onBackground }}
+                >
                   No reflections yet
                 </Text>
-                <Text variant="bodyMedium" className="text-center" style={{ color: theme.colors.onSurfaceVariant }}>
+                <Text
+                  variant="bodyMedium"
+                  className="text-center"
+                  style={{ color: theme.colors.onSurfaceVariant }}
+                >
                   Tap the + button to create your first reflection
                 </Text>
               </View>
@@ -141,7 +176,9 @@ export default function ReflectScreen() {
                 authorName={received ? (item as any).authorName : undefined}
                 sharedWithNames={
                   !received && item.isShareable && item.sharedWith.length > 0
-                    ? item.sharedWith.map(id => userIdToName.get(id)).filter((n): n is string => !!n)
+                    ? item.sharedWith
+                        .map(id => userIdToName.get(id))
+                        .filter((n): n is string => !!n)
                     : undefined
                 }
               />

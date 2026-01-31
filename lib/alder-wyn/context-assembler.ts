@@ -9,11 +9,11 @@ import { getPermittedReflections, type PermissionContext } from './permission-fi
  */
 
 export interface AssembledContext {
-  recentReflections: Array<{
+  recentReflections: {
     content: string;
     moodScore?: number;
     createdAt: string;
-  }>;
+  }[];
   moodTrend?: {
     average: number;
     trend: 'up' | 'down' | 'stable';
@@ -21,12 +21,12 @@ export interface AssembledContext {
   relationshipInfo?: {
     otherUserName: string;
     healthScore: number;
-    commonThreads: Array<{ theme: string }>;
+    commonThreads: { theme: string }[];
     sharedReflectionCount: number;
   };
   familyInfo?: {
     memberCount: number;
-    sharedThemes: Array<{ theme: string; count: number }>;
+    sharedThemes: { theme: string; count: number }[];
   };
 }
 
@@ -54,7 +54,7 @@ export async function assembleContext(
     const raw = r.content;
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
     return {
-      content: (parsed as Record<string, unknown>)?.text as string || '',
+      content: ((parsed as Record<string, unknown>)?.text as string) || '',
       moodScore: r.mood_score as number | undefined,
       createdAt: r.created_at as string,
     };
@@ -77,28 +77,21 @@ export async function assembleContext(
   return context;
 }
 
-function calculateMoodTrend(
-  reflections: Array<{ moodScore?: number }>
-): AssembledContext['moodTrend'] {
-  const withMood = reflections.filter(
-    (r) => r.moodScore !== undefined && r.moodScore !== null
-  );
+function calculateMoodTrend(reflections: { moodScore?: number }[]): AssembledContext['moodTrend'] {
+  const withMood = reflections.filter(r => r.moodScore !== undefined && r.moodScore !== null);
 
   if (withMood.length < 2) return undefined;
 
-  const scores = withMood.map((r) => r.moodScore!);
+  const scores = withMood.map(r => r.moodScore!);
   const average = scores.reduce((sum, s) => sum + s, 0) / scores.length;
 
   const midpoint = Math.floor(scores.length / 2);
-  const olderAvg =
-    scores.slice(0, midpoint).reduce((sum, s) => sum + s, 0) / midpoint;
+  const olderAvg = scores.slice(0, midpoint).reduce((sum, s) => sum + s, 0) / midpoint;
   const newerAvg =
-    scores.slice(midpoint).reduce((sum, s) => sum + s, 0) /
-    (scores.length - midpoint);
+    scores.slice(midpoint).reduce((sum, s) => sum + s, 0) / (scores.length - midpoint);
 
   const diff = newerAvg - olderAvg;
-  const trend: 'up' | 'down' | 'stable' =
-    diff > 0.5 ? 'up' : diff < -0.5 ? 'down' : 'stable';
+  const trend: 'up' | 'down' | 'stable' = diff > 0.5 ? 'up' : diff < -0.5 ? 'down' : 'stable';
 
   return { average, trend };
 }
@@ -149,7 +142,7 @@ async function assembleCollectiveContext(
     WHERE family_id = ${familyId}
   `;
 
-  const memberCount = (memberResult[0] as Record<string, unknown>)?.count as number ?? 0;
+  const memberCount = ((memberResult[0] as Record<string, unknown>)?.count as number) ?? 0;
 
   // Aggregate common threads across all family relationships
   const threadsResult = await sql`
@@ -174,4 +167,54 @@ async function assembleCollectiveContext(
     .slice(0, 5);
 
   return { memberCount, sharedThemes };
+}
+
+/**
+ * Assembles the user's own profile context (self-portrait + relational foundation)
+ * for personalizing prompt/exercise suggestions.
+ * No permission filter needed — this is the user's own data.
+ */
+export interface ProfileContext {
+  currentSeason?: string;
+  values?: string[];
+  energySources?: string;
+  relationshipNeeds?: string;
+  connectionStyles?: string[];
+  howTheyShowCare?: string;
+  relationshipStrengths?: string[];
+  areasOfGrowth?: string[];
+}
+
+export async function assembleProfileContext(userId: string): Promise<ProfileContext> {
+  const sql = getSql();
+
+  const result = await sql`
+    SELECT self_portrait, relational_foundation
+    FROM profiles
+    WHERE id = ${userId}
+    LIMIT 1
+  `;
+
+  if (result.length === 0) return {};
+
+  const row = result[0] as Record<string, unknown>;
+  const sp = (
+    typeof row.self_portrait === 'string' ? JSON.parse(row.self_portrait) : row.self_portrait
+  ) as Record<string, unknown> | null;
+  const rf = (
+    typeof row.relational_foundation === 'string'
+      ? JSON.parse(row.relational_foundation)
+      : row.relational_foundation
+  ) as Record<string, unknown> | null;
+
+  return {
+    currentSeason: sp?.currentSeason as string | undefined,
+    values: sp?.valuesIHoldClose as string[] | undefined,
+    energySources: sp?.whatGivesMeEnergy as string | undefined,
+    relationshipNeeds: sp?.needsInRelationships as string | undefined,
+    connectionStyles: sp?.howILikeToConnect as string[] | undefined,
+    howTheyShowCare: rf?.howIShowCare as string | undefined,
+    relationshipStrengths: rf?.relationshipStrengths as string[] | undefined,
+    areasOfGrowth: rf?.areasOfGrowth as string[] | undefined,
+  };
 }

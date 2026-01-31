@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { Card, Text, Chip, Button, IconButton } from 'react-native-paper';
+import { Card, Text, Chip, Button } from 'react-native-paper';
 import * as Clipboard from 'expo-clipboard';
 import type { FamilyWithMeta } from '@/hooks/use-families';
 
@@ -29,18 +29,18 @@ export function FamilyCard({ family, onPress, onInvite }: FamilyCardProps) {
   return (
     <Card className="mb-3" onPress={onPress}>
       <Card.Content>
-        <View className="flex-row items-center justify-between mb-1">
+        <View className="mb-1 flex-row items-center justify-between">
           <Text variant="titleMedium">{family.name}</Text>
           <Chip compact textStyle={{ fontSize: 12 }}>
             {ROLE_LABELS[family.userRole] ?? family.userRole}
           </Chip>
         </View>
 
-        <Text variant="bodySmall" className="text-neutral-400 mb-2">
+        <Text variant="bodySmall" className="mb-2 text-neutral-400">
           {family.memberCount} {family.memberCount === 1 ? 'member' : 'members'}
         </Text>
 
-        <View className="flex-row gap-2 mb-2">
+        <View className="mb-2 flex-row gap-2">
           <Button
             mode="text"
             compact
@@ -50,19 +50,14 @@ export function FamilyCard({ family, onPress, onInvite }: FamilyCardProps) {
             {showCode ? 'Hide Code' : 'Show Invite Code'}
           </Button>
           {onInvite && (
-            <Button
-              mode="text"
-              compact
-              icon="email-outline"
-              onPress={onInvite}
-            >
+            <Button mode="text" compact icon="email-outline" onPress={onInvite}>
               Invite by Email
             </Button>
           )}
         </View>
 
         {showCode ? (
-          <View className="flex-row items-center justify-between bg-neutral-100 rounded-lg p-3">
+          <View className="flex-row items-center justify-between rounded-lg bg-neutral-100 p-3">
             <Text variant="titleSmall" className="font-mono tracking-widest">
               {family.inviteCode.toUpperCase()}
             </Text>

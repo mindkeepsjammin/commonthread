@@ -82,7 +82,25 @@ export interface Reflection {
 export interface ReflectionContent {
   text: string;
   promptId?: string;
+  promptText?: string;
   exerciseId?: string;
+  exerciseTitle?: string;
+  exerciseSteps?: string[];
+  exerciseClosingQuestion?: string;
+}
+
+export interface GeneratedPrompt {
+  id: string;
+  text: string;
+  generatedAt: string;
+}
+
+export interface GeneratedExercise {
+  id: string;
+  title: string;
+  steps: string[];
+  closingQuestion: string;
+  generatedAt: string;
 }
 
 // Relationship types

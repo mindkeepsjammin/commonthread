@@ -62,6 +62,18 @@ export const reflectionCreateSchema = z.object({
   moodScore: z.number().min(1).max(10).optional(),
   isShareableWithFamily: z.boolean().default(false),
   sharedWith: z.array(z.string().uuid()).default([]),
+  promptId: z.string().optional(),
+  promptText: z.string().optional(),
+  exerciseId: z.string().optional(),
+  exerciseTitle: z.string().optional(),
+  exerciseSteps: z.array(z.string()).optional(),
+  exerciseClosingQuestion: z.string().optional(),
+});
+
+export const suggestionRequestSchema = z.object({
+  userId: z.string().uuid(),
+  type: z.enum(['prompt', 'exercise']),
+  previousIds: z.array(z.string()).optional(),
 });
 
 export const reflectionUpdateSchema = reflectionCreateSchema.partial();
@@ -119,3 +131,4 @@ export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type NewPasswordInput = z.infer<typeof newPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type ChangeEmailInput = z.infer<typeof changeEmailSchema>;
+export type SuggestionRequestInput = z.infer<typeof suggestionRequestSchema>;

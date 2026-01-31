@@ -27,9 +27,10 @@ export function useUpdateOnboarding() {
       const now = new Date().toISOString();
 
       // Ensure profile exists (no DB trigger to auto-create on signup)
+      // If profile was already created via complete-profile, this is a no-op
       await getSql()`
         INSERT INTO profiles (id, display_name)
-        VALUES (${user.id}, 'New User')
+        VALUES (${user.id}, ${user.email?.split('@')[0] || 'User'})
         ON CONFLICT (id) DO NOTHING
       `;
 

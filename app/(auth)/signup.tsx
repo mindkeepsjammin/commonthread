@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { Text, TextInput, Button, HelperText } from 'react-native-paper';
+import { Text, TextInput, Button, HelperText, useTheme } from 'react-native-paper';
 import { Link, router, Href } from 'expo-router';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +10,7 @@ import { signInWithGoogle } from '@/lib/neon/social-auth';
 import { Divider } from 'react-native-paper';
 
 export default function SignupScreen() {
+  const theme = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,16 +58,16 @@ export default function SignupScreen() {
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1 justify-center p-6">
-          <Text variant="headlineLarge" className="mb-2 text-center">
+          <Text variant="headlineLarge" className="mb-2 text-center" style={{ color: theme.colors.onBackground }}>
             Create Account
           </Text>
-          <Text variant="bodyLarge" className="mb-8 text-center text-neutral-500">
+          <Text variant="bodyLarge" className="mb-8 text-center" style={{ color: theme.colors.onSurfaceVariant }}>
             Join Common Thread
           </Text>
 
           {error && (
-            <View className="mb-4 rounded-lg bg-red-100 p-3">
-              <Text className="text-red-700">{error}</Text>
+            <View className="mb-4 rounded-lg p-3" style={{ backgroundColor: theme.colors.errorContainer }}>
+              <Text style={{ color: theme.colors.error }}>{error}</Text>
             </View>
           )}
 
@@ -167,7 +168,7 @@ export default function SignupScreen() {
 
           <View className="my-4 flex-row items-center">
             <Divider className="flex-1" />
-            <Text variant="bodySmall" className="mx-4 text-neutral-400">OR</Text>
+            <Text variant="bodySmall" className="mx-4" style={{ color: theme.colors.outline }}>OR</Text>
             <Divider className="flex-1" />
           </View>
 
@@ -181,7 +182,7 @@ export default function SignupScreen() {
               if (googleError) {
                 setError(googleError.message);
               } else {
-                router.replace('/(tabs)' as Href);
+                router.replace('/(auth)/complete-profile' as Href);
               }
               setIsGoogleLoading(false);
             }}
